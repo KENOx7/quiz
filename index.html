@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kenoo</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
     :root {
       --bg-gradient-start: #e3f2fd;
@@ -16,7 +19,10 @@
       --btn-primary-end: #1e88e5;
       --btn-secondary-start: #ffb74d;
       --btn-secondary-end: #ffa726;
-      --toast-bg: #d32f2f;
+      --toast-info-bg: #333;
+      --toast-success-bg: #388e3c;
+      --toast-error-bg: #d32f2f;
+      --toast-warning-bg: #f57c00;
       --toast-text: #fff;
     }
     body.dark {
@@ -29,7 +35,10 @@
       --btn-primary-end: #357ab7;
       --btn-secondary-start: #f5a25d;
       --btn-secondary-end: #e07d24;
-      --toast-bg: #ff5252;
+      --toast-info-bg: #555;
+      --toast-success-bg: #4caf50;
+      --toast-error-bg: #ff5252;
+      --toast-warning-bg: #ff9800;
       --toast-text: #fff;
     }
 
@@ -39,8 +48,12 @@
       padding: 0;
     }
     body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(
+        135deg,
+        var(--bg-gradient-start) 0%,
+        var(--bg-gradient-end) 100%
+      );
       color: var(--text-color);
       display: flex;
       flex-direction: column;
@@ -49,8 +62,27 @@
       padding: 20px;
       overflow-x: hidden;
       transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
     }
-    /* Başlıq üçün yeni fade-in animasiyası */
+
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      z-index: 1000;
+      transition: top 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Fade-in animation for header */
     h1 {
       margin-bottom: 20px;
       font-weight: 600;
@@ -71,13 +103,14 @@
       }
     }
 
+    /* Loader overlay */
     #loader {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -97,9 +130,12 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
+    /* Main container card */
     #container {
       width: 100%;
       max-width: 600px;
@@ -125,6 +161,7 @@
       margin-bottom: 16px;
     }
 
+    /* Back button */
     .back-btn {
       position: absolute;
       top: 16px;
@@ -147,18 +184,24 @@
       padding-top: 50px;
     }
 
+    /* Start topic buttons */
     .start-btn {
       position: relative;
       padding: 14px 28px;
       margin: 8px;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--btn-primary-start) 0%, var(--btn-primary-end) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--btn-primary-start) 0%,
+        var(--btn-primary-end) 100%
+      );
       color: #fff;
       cursor: pointer;
       font-size: 1rem;
       font-weight: 600;
-      transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      transition: background 0.3s ease, box-shadow 0.3s ease,
+        transform 0.2s ease;
       box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
       overflow: hidden;
     }
@@ -168,38 +211,55 @@
       transform: scale(1.03);
     }
 
+    /* Quiz choice buttons */
     #btn-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 12px;
       margin-top: 20px;
     }
     .quiz-btn {
       position: relative;
-      flex: 1 1 120px;
-      max-width: 160px;
       padding: 12px 20px;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--btn-secondary-start) 0%, var(--btn-secondary-end) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--btn-secondary-start) 0%,
+        var(--btn-secondary-end) 100%
+      );
       color: #fff;
       cursor: pointer;
       font-size: 0.95rem;
       font-weight: 600;
-      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+      transition: background 0.3s ease, transform 0.2s ease,
+        box-shadow 0.3s ease, opacity 0.4s ease;
       box-shadow: 0 4px 12px rgba(255, 183, 77, 0.4);
       text-align: center;
       opacity: 0;
-      animation: slide-down 0.5s forwards ease-out;
+      animation: slideDown 0.5s forwards ease-out;
     }
-    .quiz-btn:nth-child(1) { animation-delay: 0.2s; }
-    .quiz-btn:nth-child(2) { animation-delay: 0.35s; }
-    .quiz-btn:nth-child(3) { animation-delay: 0.5s; }
-    .quiz-btn:nth-child(4) { animation-delay: 0.65s; }
-    @keyframes slide-down {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .quiz-btn:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    .quiz-btn:nth-child(2) {
+      animation-delay: 0.35s;
+    }
+    .quiz-btn:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+    .quiz-btn:nth-child(4) {
+      animation-delay: 0.65s;
+    }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .quiz-btn:hover {
       background: linear-gradient(135deg, var(--btn-secondary-end) 0%, #fb8c00 100%);
@@ -207,24 +267,26 @@
       box-shadow: 0 6px 16px rgba(255, 183, 77, 0.5);
     }
 
+    /* Ripple effect */
     button {
       overflow: hidden;
     }
     .ripple {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255,255,255,0.6);
+      background: rgba(255, 255, 255, 0.6);
       transform: scale(0);
-      animation: ripple-effect 0.6s linear;
+      animation: rippleEffect 0.6s linear;
     }
-    @keyframes ripple-effect {
+    @keyframes rippleEffect {
       to {
         transform: scale(4);
         opacity: 0;
       }
     }
 
-    iframe {
+    /* Fullscreen quiz iframe */
+    iframe.fullscreen-quiz {
       width: 100%;
       height: 60vh;
       border: none;
@@ -233,13 +295,14 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
+    /* Modal overlay for iOS */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0,0,0,0.5);
+      background-color: rgba(0, 0, 0, 0.5);
       z-index: 10000;
       display: flex;
       align-items: center;
@@ -252,7 +315,7 @@
       background: var(--card-bg);
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     }
     .modal-content iframe {
       width: 100%;
@@ -276,16 +339,17 @@
       justify-content: center;
     }
 
+    /* Toast notifications */
     #toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(100%);
-      background-color: var(--toast-bg);
+      background-color: var(--toast-info-bg);
       color: var(--toast-text);
       padding: 12px 24px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: transform 0.4s ease, opacity 0.4s ease;
       opacity: 0;
       z-index: 10000;
@@ -294,7 +358,20 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+    #toast.info {
+      background-color: var(--toast-info-bg);
+    }
+    #toast.success {
+      background-color: var(--toast-success-bg);
+    }
+    #toast.error {
+      background-color: var(--toast-error-bg);
+    }
+    #toast.warning {
+      background-color: var(--toast-warning-bg);
+    }
 
+    /* Dark mode toggle button */
     .dark-toggle {
       position: fixed;
       top: 16px;
@@ -311,9 +388,24 @@
       color: var(--text-color);
       font-size: 1rem;
       transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      z-index: 1001;
     }
     .dark-toggle:hover {
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Language selector */
+    #langSelect {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--text-color);
+      background: var(--card-bg);
+      color: var(--text-color);
+      font-size: 0.9rem;
+      z-index: 1001;
     }
 
     @media (max-width: 600px) {
@@ -330,7 +422,8 @@
       #container.has-back {
         padding-top: 45px;
       }
-      .start-btn, .quiz-btn {
+      .start-btn,
+      .quiz-btn {
         width: 100%;
         max-width: unset;
         font-size: 1rem;
@@ -339,43 +432,153 @@
       #btn-container {
         gap: 8px;
       }
-      iframe {
+      iframe.fullscreen-quiz {
         height: 50vh;
+      }
+      #langSelect,
+      .dark-toggle {
+        top: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
       }
     }
   </style>
 </head>
 <body>
+  <a href="#container" class="skip-link">Quiz-ə keç</a>
   <div id="loader">
     <div class="spinner"></div>
   </div>
 
   <!-- Dark mode toggle -->
-  <button id="darkToggle" class="dark-toggle">🌙</button>
+  <button id="darkToggle" class="dark-toggle" aria-label="Toggle dark mode">🌙</button>
 
-  <!-- Bu başlıq artıq typing animasiyasından məhrum edildi və fadeIn ilə əvəz olundu -->
-  <h1>Quiz Mövzularını Seçin</h1>
+  <!-- Language selector -->
+  <select id="langSelect" aria-label="Select language">
+    <option value="az">AZ</option>
+    <option value="en">EN</option>
+    <option value="ru">RU</option>
+  </select>
 
-  <div id="toast">REDDOLL!!!</div>
+  <!-- Header -->
+  <h1 id="headerTitle">Quiz Mövzularını Seçin</h1>
 
+  <!-- Toast container -->
+  <div id="toast" role="alert" aria-live="assertive"></div>
+
+  <!-- Main card container -->
   <div id="container">
-    <p class="section-title">Başlanğıc mövzusu:</p>
-    <button class="start-btn" onclick="startQuiz('proqramlasdirma')">Proqramlaşdırma</button>
-    <button class="start-btn" onclick="startQuiz('xetti')">Xətti Cəbr</button>
-    <button class="start-btn" onclick="startQuiz('xdiak')">XDIAK</button>
-    <button class="start-btn" onclick="startQuiz('diferensial')">Diferensial</button>
+    <!-- İçerik JS ile yüklənəcək -->
   </div>
 
+  <!-- Lottie animation -->
   <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
-    <iframe src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie" allowfullscreen frameborder="0" style="width: 100%; height: 300px;"></iframe>
+    <iframe
+      src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie"
+      allowfullscreen
+      frameborder="0"
+      style="width: 100%; height: 300px;"
+    ></iframe>
   </div>
 
+  <!-- Click sound -->
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
   <script>
+    // ======== Dil dəstəyi üçün tərcümə obyektləri ========
+    const translations = {
+      az: {
+        selectTopic: "Quiz Mövzularını Seçin",
+        startTopic: "Başlanğıc mövzusu:",
+        back: "‹ Geri",
+        toastErrorIP: "Sizin IP icazəli deyil!",
+        topicLabels: {
+          program: "Proqramlaşdırma",
+          linear: "Xətti Cəbr",
+          xdiak: "XDIAK",
+          diff: "Diferensial"
+        },
+        quizTitleMap: {
+          program: "Proqramlaşdırma suallarını seç:",
+          linear: "Xətti Cəbr suallarını seç:",
+          xdiak: "XDIAK suallarını seç:",
+          diff: "Diferensial suallarını seç:"
+        }
+      },
+      en: {
+        selectTopic: "Choose Quiz Topics",
+        startTopic: "Starting topic:",
+        back: "‹ Back",
+        toastErrorIP: "Your IP is not allowed!",
+        topicLabels: {
+          program: "Programming",
+          linear: "Linear Algebra",
+          xdiak: "XDIAK",
+          diff: "Differential"
+        },
+        quizTitleMap: {
+          program: "Select Programming Questions:",
+          linear: "Select Linear Algebra Questions:",
+          xdiak: "Select XDIAK Questions:",
+          diff: "Select Differential Questions:"
+        }
+      },
+      ru: {
+        selectTopic: "Выберите тему викторины",
+        startTopic: "Начальная тема:",
+        back: "‹ Назад",
+        toastErrorIP: "Ваш IP не разрешен!",
+        topicLabels: {
+          program: "Программирование",
+          linear: "Линейная алгебра",
+          xdiak: "XDIAK",
+          diff: "Дифференциальное"
+        },
+        quizTitleMap: {
+          program: "Выберите вопросы по программированию:",
+          linear: "Выберите вопросы по линейной алгебре:",
+          xdiak: "Выберите вопросы XDIAK:",
+          diff: "Выберите вопросы по дифференциальному:"
+        }
+      }
+    };
+
+    // ======== Quiz məlumatları ========
+    const quizData = {
+      program: [
+        { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
+        { label: "111-220", link: "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d" },
+        { label: "221-350", link: "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f" }
+      ],
+      linear: [
+        { label: "1-111", link: "https://quizizz.com/embed/quiz/683f58989ba449e01c456667" },
+        { label: "112-218", link: "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1" },
+        { label: "219-320", link: "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082" }
+      ],
+      xdiak: [
+        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481" },
+        { label: "101-200", link: "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5" },
+        { label: "201-300", link: "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2" },
+        { label: "301-425", link: "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7" }
+      ],
+      diff: [
+        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1" },
+        { label: "101-205", link: "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf" },
+        { label: "206-301", link: "https://quizizz.com/embed/quiz/683f60d33740abec43503e14" }
+      ]
+    };
+
+    // İcazəli IP prefiksləri
     const allowedIPPrefixes = [
-      "37.114.", "45.15.", "37.61.", "82.194.",
-      "185.146.", "94.20.", "149.126.", "37.26."
+      "37.114.",
+      "45.15.",
+      "37.61.",
+      "82.194.",
+      "185.146.",
+      "94.20.",
+      "149.126.",
+      "37.26."
     ];
     let userAllowed = false;
     const container = document.getElementById("container");
@@ -383,186 +586,95 @@
     const loader = document.getElementById("loader");
     const clickAudio = document.getElementById("clickSound");
     const toggleBtn = document.getElementById("darkToggle");
+    const langSelect = document.getElementById("langSelect");
+    const headerTitle = document.getElementById("headerTitle");
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const lastTopic = localStorage.getItem("lastTopic");
-      const currentMode = localStorage.getItem("theme");
-      if (currentMode === "dark") {
-        document.body.classList.add("dark");
-        toggleBtn.textContent = "☀️";
-      }
-      if (lastTopic) {
-        setTimeout(() => startQuiz(lastTopic), 800);
-      }
-    });
-
-    window.addEventListener("load", () => {
-      loader.classList.add("hidden");
-      setTimeout(() => loader.style.display = "none", 300);
-    });
-
-    async function checkIP() {
-      try {
-        const res = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        const userIP = data.ip;
-        userAllowed = allowedIPPrefixes.some(prefix => userIP.startsWith(prefix));
-        if (!userAllowed) {
-          container.style.display = "none";
-          showToast("Sizin IP icazəli deyil!");
-        }
-      } catch (err) {
-        console.error("Xəta baş verdi:", err);
-      }
+    // Cari dilin açarı
+    function getCurrentLang() {
+      return localStorage.getItem("language") || "az";
     }
 
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
+    // Dil üzrə bütün mətnləri yeniləyir
+    function loadLanguage(lang) {
+      document.documentElement.lang = lang;
+      const t = translations[lang];
+      headerTitle.textContent = t.selectTopic;
+      // Əsas başlanğıc menyunu qur
+      renderMainMenu();
     }
 
-    toggleBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-        toggleBtn.textContent = "☀️";
-      } else {
-        localStorage.setItem("theme", "light");
-        toggleBtn.textContent = "🌙";
-      }
-    });
-
-    function addRippleEffect(btn) {
-      btn.addEventListener("click", function(e) {
-        const rect = btn.getBoundingClientRect();
-        const circle = document.createElement("span");
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        circle.style.width = circle.style.height = size + 'px';
-        circle.style.left = x + 'px';
-        circle.style.top = y + 'px';
-        circle.classList.add("ripple");
-        const ripple = btn.getElementsByClassName("ripple")[0];
-        if (ripple) ripple.remove();
-        btn.appendChild(circle);
-      });
-    }
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll("button").forEach(button => {
-        addRippleEffect(button);
-        button.addEventListener("click", () => {
-          clickAudio.currentTime = 0;
-          clickAudio.play();
-        });
-      });
-    });
-
-    function showMainMenu() {
-      container.classList.remove('has-back', 'hidden');
-      container.innerHTML = 
-        '<p class="section-title">Başlanğıc mövzusu:</p>' +
-        '<button class="start-btn" onclick="startQuiz(\'proqramlasdirma\')">Proqramlaşdırma</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'xetti\')">Xətti Cəbr</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'xdiak\')">XDIAK</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'diferensial\')">Diferensial</button>';
-      document.querySelectorAll("button").forEach(button => {
-        addRippleEffect(button);
-        button.addEventListener("click", () => {
-          clickAudio.currentTime = 0;
-          clickAudio.play();
-        });
-      });
+    // Əsas menyunu render edən funksiya
+    function renderMainMenu() {
+      const lang = getCurrentLang();
+      const t = translations[lang];
+      container.classList.remove("has-back", "hidden");
+      container.innerHTML =
+        '<p class="section-title">' +
+        t.startTopic +
+        "</p>" +
+        '<button class="start-btn" data-topic="program">' +
+        t.topicLabels.program +
+        "</button>" +
+        '<button class="start-btn" data-topic="linear">' +
+        t.topicLabels.linear +
+        "</button>" +
+        '<button class="start-btn" data-topic="xdiak">' +
+        t.topicLabels.xdiak +
+        "</button>" +
+        '<button class="start-btn" data-topic="diff">' +
+        t.topicLabels.diff +
+        "</button>";
+      attachButtonEffects();
     }
 
+    // Back düyməsini və quiz düymələrini render edən funksiya
     function startQuiz(topic) {
       if (!userAllowed) return;
-
       localStorage.setItem("lastTopic", topic);
-      const titleTextMap = {
-        'proqramlasdirma': 'Proqramlaşdırma suallarını seç:',
-        'xetti': 'Xətti Cəbr suallarını seç:',
-        'xdiak': 'XDIAK suallarını seç:',
-        'diferensial': 'Diferensial suallarını seç:'
-      };
-      const linksMap = {
-        'proqramlasdirma': [
-          "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f",
-          "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d",
-          "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f"
-        ],
-        'xetti': [
-          "https://quizizz.com/embed/quiz/683f58989ba449e01c456667",
-          "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1",
-          "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082"
-        ],
-        'xdiak': [
-          "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481",
-          "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5",
-          "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2",
-          "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7"
-        ],
-        'diferensial': [
-          "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1",
-          "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf",
-          "https://quizizz.com/embed/quiz/683f60d33740abec43503e14"
-        ]
-      };
-      const labelsMap = {
-        'proqramlasdirma': ["1-110", "111-220", "221-350"],
-        'xetti': ["1-111", "112-218", "219-320"],
-        'xdiak': ["1-100", "101-200", "201-300", "301-425"],
-        'diferensial': ["1-100", "101-205", "206-301"]
-      };
+      const lang = getCurrentLang();
+      const t = translations[lang];
 
       container.classList.add("hidden");
       setTimeout(() => {
         container.classList.remove("has-back", "hidden");
         container.classList.add("has-back");
-        container.innerHTML = 
-          '<button class="back-btn" onclick="showMainMenu()">‹ Geri</button>' +
-          '<p class="section-title">' + (titleTextMap[topic] || 'Bölmə tapılmadı') + '</p>';
+        container.innerHTML =
+          '<button class="back-btn" aria-label="' +
+          t.back +
+          '">' +
+          t.back +
+          "</button>" +
+          '<p class="section-title">' +
+          t.quizTitleMap[topic] +
+          "</p>";
 
         const btnContainer = document.createElement("div");
         btnContainer.id = "btn-container";
 
-        const links = linksMap[topic] || [];
-        const labels = labelsMap[topic] || [];
-
-        links.forEach((link, index) => {
+        quizData[topic].forEach((item, index) => {
           const btn = document.createElement("button");
           btn.className = "quiz-btn";
-          btn.textContent = labels[index];
-          btn.onclick = () => openQuiz(link);
+          btn.textContent = item.label;
+          btn.setAttribute("data-link", item.link);
           btnContainer.appendChild(btn);
         });
         container.appendChild(btnContainer);
 
         setTimeout(() => container.classList.remove("hidden"), 50);
-
-        const newButtons = container.querySelectorAll("button");
-        newButtons.forEach(button => {
-          addRippleEffect(button);
-          button.addEventListener("click", () => {
-            clickAudio.currentTime = 0;
-            clickAudio.play();
-          });
-        });
+        attachButtonEffects();
       }, 300);
     }
 
-    function openQuiz(link) {
-      const existingModal = document.getElementById("modal-overlay");
-      if (existingModal) existingModal.remove();
-      const existingIframe = document.getElementById("fullscreen-quiz");
-      if (existingIframe) existingIframe.remove();
-
+    // Quiz açan funksiya
+    function openQuiz(link, btn) {
+      // Button loader effekti
+      btn.classList.add("btn-loading");
       if (isiOS) {
+        const existingModal = document.getElementById("modal-overlay");
+        if (existingModal) existingModal.remove();
+
         const overlay = document.createElement("div");
         overlay.id = "modal-overlay";
         overlay.className = "modal-overlay";
@@ -588,15 +700,23 @@
         modal.appendChild(iframe);
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
+        btn.classList.remove("btn-loading");
       } else {
+        const existingIframe = document.getElementById("fullscreen-quiz");
+        if (existingIframe) existingIframe.remove();
+
         const iframe = document.createElement("iframe");
         iframe.src = link;
         iframe.id = "fullscreen-quiz";
+        iframe.className = "fullscreen-quiz";
         iframe.allow = "fullscreen";
         iframe.allowFullscreen = true;
-        iframe.setAttribute("webkitallowfullscreen", "");
-        iframe.setAttribute("mozallowfullscreen", "");
+        iframe.loading = "lazy";
         document.body.appendChild(iframe);
+
+        iframe.onload = () => {
+          btn.classList.remove("btn-loading");
+        };
 
         if (iframe.requestFullscreen) iframe.requestFullscreen();
         else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
@@ -608,6 +728,7 @@
       }
     }
 
+    // Fullscreen-dən çıxanda iframe-i sil
     function handleExit() {
       const iframe = document.getElementById("fullscreen-quiz");
       if (!document.fullscreenElement && iframe) {
@@ -618,7 +739,132 @@
       }
     }
 
-    window.onload = checkIP;
+    // Toast göstərən funksiya
+    function showToast(message, type = "info") {
+      toast.textContent = message;
+      toast.className = "";
+      toast.classList.add("show", type);
+      setTimeout(() => {
+        toast.classList.remove("show", type);
+      }, 3000);
+    }
+
+    // Button-lara ripple effekti əlavə edir
+    function addRippleEffect(btn) {
+      btn.addEventListener("click", function (e) {
+        const rect = btn.getBoundingClientRect();
+        const circle = document.createElement("span");
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        circle.style.width = circle.style.height = size + "px";
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+        circle.classList.add("ripple");
+        const ripple = btn.getElementsByClassName("ripple")[0];
+        if (ripple) ripple.remove();
+        btn.appendChild(circle);
+      });
+    }
+
+    // Bütün button-lara effect və click səsi əlavə edir
+    function attachButtonEffects() {
+      document.querySelectorAll("button").forEach((button) => {
+        addRippleEffect(button);
+        button.addEventListener("click", () => {
+          clickAudio.currentTime = 0;
+          clickAudio.play();
+        });
+      });
+    }
+
+    // IP yoxlayır
+    async function checkIP() {
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        const userIP = data.ip;
+        userAllowed = allowedIPPrefixes.some((prefix) =>
+          userIP.startsWith(prefix)
+        );
+        if (!userAllowed) {
+          container.style.display = "none";
+          const msg = translations[getCurrentLang()].toastErrorIP;
+          showToast(msg, "error");
+        }
+      } catch (err) {
+        console.error("Xəta baş verdi:", err);
+      }
+    }
+
+    // Dark mode parametrləri
+    function initializeTheme() {
+      const currentMode = localStorage.getItem("theme");
+      if (currentMode === "dark") {
+        document.body.classList.add("dark");
+        toggleBtn.textContent = "☀️";
+      } else {
+        toggleBtn.textContent = "🌙";
+      }
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        if (document.body.classList.contains("dark")) {
+          localStorage.setItem("theme", "dark");
+          toggleBtn.textContent = "☀️";
+        } else {
+          localStorage.setItem("theme", "light");
+          toggleBtn.textContent = "🌙";
+        }
+      });
+    }
+
+    // Loader-nu indeks sənədinin tamamlanmasından sonra gizlədir
+    function initializeLoader() {
+      window.addEventListener("load", () => {
+        loader.classList.add("hidden");
+        setTimeout(() => (loader.style.display = "none"), 300);
+      });
+    }
+
+    // Dil seçimini idarə edir
+    function initializeLanguageSelector() {
+      const savedLang = getCurrentLang();
+      langSelect.value = savedLang;
+      loadLanguage(savedLang);
+      langSelect.addEventListener("change", (e) => {
+        const newLang = e.target.value;
+        localStorage.setItem("language", newLang);
+        loadLanguage(newLang);
+      });
+    }
+
+    // Başlanğıcda çağırılan init funksiyası
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeTheme();
+      initializeLoader();
+      initializeLanguageSelector();
+      // Əgər istifadəçi daha əvvəl mövzu seçibsə, avtomatik açırıq
+      const lastTopic = localStorage.getItem("lastTopic");
+      if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
+    });
+
+    // IP yoxlamasını pencərə tam yüklənəndə (load) çağırırıq
+    window.addEventListener("load", checkIP);
+
+    // Event delegation: container-dakı bütün düymə kliklərini idarə edir
+    container.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn.classList.contains("start-btn")) {
+        const topic = btn.getAttribute("data-topic");
+        startQuiz(topic);
+      } else if (btn.classList.contains("back-btn")) {
+        renderMainMenu();
+      } else if (btn.classList.contains("quiz-btn")) {
+        const link = btn.getAttribute("data-link");
+        openQuiz(link, btn);
+      }
+    });
   </script>
 </body>
 </html>
