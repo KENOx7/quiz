@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kenoo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-start: #e3f2fd;
+      --bg-gradient-end: #ffffff;
+      --text-color: #333;
+      --card-bg: #ffffff;
+      --card-shadow: rgba(0, 0, 0, 0.08);
+      --btn-primary-start: #42a5f5;
+      --btn-primary-end: #1e88e5;
+      --btn-secondary-start: #ffb74d;
+      --btn-secondary-end: #ffa726;
+      --toast-bg: #d32f2f;
+      --toast-text: #fff;
+    }
+    body.dark {
+      --bg-gradient-start: #2c2c2c;
+      --bg-gradient-end: #121212;
+      --text-color: #f0f0f0;
+      --card-bg: #1e1e1e;
+      --card-shadow: rgba(0, 0, 0, 0.4);
+      --btn-primary-start: #4a90e2;
+      --btn-primary-end: #357ab7;
+      --btn-secondary-start: #f5a25d;
+      --btn-secondary-end: #e07d24;
+      --toast-bg: #ff5252;
+      --toast-text: #fff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 600;
+      font-size: 2rem;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid var(--text-color);
+      width: 0;
+      animation:
+        typing 1.5s steps(20, end) forwards,
+        blink-caret 0.75s step-end infinite;
+    }
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    }
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 6px solid #ddd;
+      border-top: 6px solid var(--btn-primary-start);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #container {
+      width: 100%;
+      max-width: 600px;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--card-shadow);
+      padding: 30px 20px;
+      text-align: center;
+      transition: transform 0.3s ease, opacity 0.4s ease;
+      position: relative;
+      opacity: 1;
+    }
+    #container.hidden {
+      opacity: 0;
+    }
+    #container:hover {
+      transform: translateY(-2px);
+    }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      background-color: #9e9e9e;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.3s ease;
+      overflow: hidden;
+    }
+    .back-btn:hover {
+      background-color: #757575;
+    }
+    #container.has-back {
+      padding-top: 50px;
+    }
+
+    .start-btn {
+      position: relative;
+      padding: 14px 28px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--btn-primary-start) 0%, var(--btn-primary-end) 100%);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
+      overflow: hidden;
+    }
+    .start-btn:hover {
+      background: linear-gradient(135deg, var(--btn-primary-end) 0%, #1565c0 100%);
+      box-shadow: 0 6px 16px rgba(66, 165, 245, 0.5);
+      transform: scale(1.03);
+    }
+
+    #btn-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .quiz-btn {
+      position: relative;
+      flex: 1 1 120px;
+      max-width: 160px;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--btn-secondary-start) 0%, var(--btn-secondary-end) 100%);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+      box-shadow: 0 4px 12px rgba(255, 183, 77, 0.4);
+      text-align: center;
+      opacity: 0;
+      animation: slide-down 0.5s forwards ease-out;
+    }
+    .quiz-btn:nth-child(1) { animation-delay: 0.2s; }
+    .quiz-btn:nth-child(2) { animation-delay: 0.35s; }
+    .quiz-btn:nth-child(3) { animation-delay: 0.5s; }
+    .quiz-btn:nth-child(4) { animation-delay: 0.65s; }
+    @keyframes slide-down {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .quiz-btn:hover {
+      background: linear-gradient(135deg, var(--btn-secondary-end) 0%, #fb8c00 100%);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 6px 16px rgba(255, 183, 77, 0.5);
+    }
+
+    button {
+      overflow: hidden;
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      transform: scale(0);
+      animation: ripple-effect 0.6s linear;
+    }
+    @keyframes ripple-effect {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    iframe {
+      width: 100%;
+      height: 60vh;
+      border: none;
+      border-radius: 12px;
+      margin-top: 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      position: relative;
+      width: 90vw;
+      height: 90vh;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .modal-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .close-modal {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      background-color: var(--toast-bg);
+      color: var(--toast-text);
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+      z-index: 10000;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .dark-toggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: 2px solid var(--text-color);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color);
+      font-size: 1rem;
+      transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    .dark-toggle:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+      }
+      #container {
+        padding: 20px 12px;
+      }
+      #container.has-back {
+        padding-top: 45px;
+      }
+      .start-btn, .quiz-btn {
+        width: 100%;
+        max-width: unset;
+        font-size: 1rem;
+        padding: 12px 0;
+      }
+      #btn-container {
+        gap: 8px;
+      }
+      iframe {
+        height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner"></div>
+  </div>
+
+  <button id="darkToggle" class="dark-toggle">🌙</button>
+
+  <h1>Quiz Mövzularını Seçin</h1>
+
+  <div id="toast">REDDOLL!!!</div>
+
+  <div id="container">
+    <p class="section-title">Başlanğıc mövzusu:</p>
+    <button class="start-btn" onclick="startQuiz('proqramlasdirma')">Proqramlaşdırma</button>
+    <button class="start-btn" onclick="startQuiz('xetti')">Xətti Cəbr</button>
+    <button class="start-btn" onclick="startQuiz('xdiak')">XDIAK</button>
+    <button class="start-btn" onclick="startQuiz('diferensial')">Diferensial</button>
+  </div>
+
+  <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
+    <iframe src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie" allowfullscreen frameborder="0" style="width: 100%; height: 300px;"></iframe>
+  </div>
+
+  <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+
+  <script>
+    const allowedIPPrefixes = [
+      "37.114.", "45.15.", "37.61.", "82.194.",
+      "185.146.", "94.20.", "149.126.", "37.26."
+    ];
+    let userAllowed = false;
+    const container = document.getElementById("container");
+    const toast = document.getElementById("toast");
+    const loader = document.getElementById("loader");
+    const clickAudio = document.getElementById("clickSound");
+    const toggleBtn = document.getElementById("darkToggle");
+
+    const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const lastTopic = localStorage.getItem("lastTopic");
+      const currentMode = localStorage.getItem("theme");
+      if (currentMode === "dark") {
+        document.body.classList.add("dark");
+        toggleBtn.textContent = "☀️";
+      }
+      if (lastTopic) {
+        setTimeout(() => startQuiz(lastTopic), 800);
+      }
+    });
+
+    window.addEventListener("load", () => {
+      loader.classList.add("hidden");
+      setTimeout(() => loader.style.display = "none", 300);
+    });
+
+    async function checkIP() {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        const userIP = data.ip;
+        userAllowed = allowedIPPrefixes.some(prefix => userIP.startsWith(prefix));
+        if (!userAllowed) {
+          container.style.display = "none";
+          showToast("Sizin IP icazəli deyil!");
+        }
+      } catch (err) {
+        console.error("Xəta baş verdi:", err);
+      }
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3000);
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        toggleBtn.textContent = "☀️";
+      } else {
+        localStorage.setItem("theme", "light");
+        toggleBtn.textContent = "🌙";
+      }
+    });
+
+    function addRippleEffect(btn) {
+      btn.addEventListener("click", function(e) {
+        const rect = btn.getBoundingClientRect();
+        const circle = document.createElement("span");
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        circle.style.width = circle.style.height = size + 'px';
+        circle.style.left = x + 'px';
+        circle.style.top = y + 'px';
+        circle.classList.add("ripple");
+        const ripple = btn.getElementsByClassName("ripple")[0];
+        if (ripple) ripple.remove();
+        btn.appendChild(circle);
+      });
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("button").forEach(button => {
+        addRippleEffect(button);
+        button.addEventListener("click", () => {
+          clickAudio.currentTime = 0;
+          clickAudio.play();
+        });
+      });
+    });
+
+    function showMainMenu() {
+      container.classList.remove('has-back', 'hidden');
+      container.innerHTML = 
+        '<p class="section-title">Başlanğıc mövzusu:</p>' +
+        '<button class="start-btn" onclick="startQuiz(\'proqramlasdirma\')">Proqramlaşdırma</button>' +
+        '<button class="start-btn" onclick="startQuiz(\'xetti\')">Xətti Cəbr</button>' +
+        '<button class="start-btn" onclick="startQuiz(\'xdiak\')">XDIAK</button>' +
+        '<button class="start-btn" onclick="startQuiz(\'diferensial\')">Diferensial</button>';
+      document.querySelectorAll("button").forEach(button => {
+        addRippleEffect(button);
+        button.addEventListener("click", () => {
+          clickAudio.currentTime = 0;
+          clickAudio.play();
+        });
+      });
+    }
+
+    function startQuiz(topic) {
+      if (!userAllowed) return;
+
+      localStorage.setItem("lastTopic", topic);
+      const titleTextMap = {
+        'proqramlasdirma': 'Proqramlaşdırma suallarını seç:',
+        'xetti': 'Xətti Cəbr suallarını seç:',
+        'xdiak': 'XDIAK suallarını seç:',
+        'diferensial': 'Diferensial suallarını seç:'
+      };
+      const linksMap = {
+        'proqramlasdirma': [
+          "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f",
+          "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d",
+          "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f"
+        ],
+        'xetti': [
+          "https://quizizz.com/embed/quiz/683f58989ba449e01c456667",
+          "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1",
+          "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082"
+        ],
+        'xdiak': [
+          "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481",
+          "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5",
+          "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2",
+          "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7"
+        ],
+        'diferensial': [
+          "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1",
+          "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf",
+          "https://quizizz.com/embed/quiz/683f60d33740abec43503e14"
+        ]
+      };
+      const labelsMap = {
+        'proqramlasdirma': ["1-110", "111-220", "221-350"],
+        'xetti': ["1-111", "112-218", "219-320"],
+        'xdiak': ["1-100", "101-200", "201-300", "301-425"],
+        'diferensial': ["1-100", "101-205", "206-301"]
+      };
+
+      container.classList.add("hidden");
+      setTimeout(() => {
+        container.classList.remove("has-back", "hidden");
+        container.classList.add("has-back");
+        container.innerHTML = 
+          '<button class="back-btn" onclick="showMainMenu()">‹ Geri</button>' +
+          '<p class="section-title">' + (titleTextMap[topic] || 'Bölmə tapılmadı') + '</p>';
+
+        const btnContainer = document.createElement("div");
+        btnContainer.id = "btn-container";
+
+        const links = linksMap[topic] || [];
+        const labels = labelsMap[topic] || [];
+
+        links.forEach((link, index) => {
+          const btn = document.createElement("button");
+          btn.className = "quiz-btn";
+          btn.textContent = labels[index];
+          btn.onclick = () => openQuiz(link);
+          btnContainer.appendChild(btn);
+        });
+        container.appendChild(btnContainer);
+
+        setTimeout(() => container.classList.remove("hidden"), 50);
+
+        const newButtons = container.querySelectorAll("button");
+        newButtons.forEach(button => {
+          addRippleEffect(button);
+          button.addEventListener("click", () => {
+            clickAudio.currentTime = 0;
+            clickAudio.play();
+          });
+        });
+      }, 300);
+    }
+
+    function openQuiz(link) {
+      const existingModal = document.getElementById("modal-overlay");
+      if (existingModal) existingModal.remove();
+      const existingIframe = document.getElementById("fullscreen-quiz");
+      if (existingIframe) existingIframe.remove();
+
+      if (isiOS) {
+
+        const overlay = document.createElement("div");
+        overlay.id = "modal-overlay";
+        overlay.className = "modal-overlay";
+
+        const modal = document.createElement("div");
+        modal.className = "modal-content";
+
+
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "close-modal";
+        closeBtn.innerHTML = "✕";
+        closeBtn.onclick = () => {
+          document.body.removeChild(overlay);
+        };
+
+        const iframe = document.createElement("iframe");
+        iframe.src = link;
+        iframe.allow = "fullscreen";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute("webkitallowfullscreen", "");
+        iframe.setAttribute("mozallowfullscreen", "");
+
+        modal.appendChild(closeBtn);
+        modal.appendChild(iframe);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+      } else {
+
+        const iframe = document.createElement("iframe");
+        iframe.src = link;
+        iframe.id = "fullscreen-quiz";
+        iframe.allow = "fullscreen";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute("webkitallowfullscreen", "");
+        iframe.setAttribute("mozallowfullscreen", "");
+        document.body.appendChild(iframe);
+
+        if (iframe.requestFullscreen) iframe.requestFullscreen();
+        else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+        else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+
+        document.addEventListener("fullscreenchange", handleExit);
+        document.addEventListener("webkitfullscreenchange", handleExit);
+        document.addEventListener("msfullscreenchange", handleExit);
+      }
+    }
+
+    function handleExit() {
+      const iframe = document.getElementById("fullscreen-quiz");
+      if (!document.fullscreenElement && iframe) {
+        iframe.remove();
+        document.removeEventListener("fullscreenchange", handleExit);
+        document.removeEventListener("webkitfullscreenchange", handleExit);
+        document.removeEventListener("msfullscreenchange", handleExit);
+      }
+    }
+
+    window.onload = checkIP;
+  </script>
+</body>
+</html>
