@@ -394,20 +394,6 @@
       background-color: rgba(0, 0, 0, 0.1);
     }
 
-    /* Language selector */
-    #langSelect {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid var(--text-color);
-      background: var(--card-bg);
-      color: var(--text-color);
-      font-size: 0.9rem;
-      z-index: 1001;
-    }
-
     @media (max-width: 600px) {
       body {
         padding: 10px;
@@ -435,7 +421,6 @@
       iframe.fullscreen-quiz {
         height: 50vh;
       }
-      #langSelect,
       .dark-toggle {
         top: 8px;
         width: 32px;
@@ -452,14 +437,7 @@
   </div>
 
   <!-- Dark mode toggle -->
-  <button id="darkToggle" class="dark-toggle" aria-label="Toggle dark mode">🌙</button>
-
-  <!-- Language selector -->
-  <select id="langSelect" aria-label="Select language">
-    <option value="az">AZ</option>
-    <option value="en">EN</option>
-    <option value="ru">RU</option>
-  </select>
+  <button id="darkToggle" class="dark-toggle" aria-label="Dark rejimi dəyişdir">🌙</button>
 
   <!-- Header -->
   <h1 id="headerTitle">Quiz Mövzularını Seçin</h1>
@@ -468,9 +446,7 @@
   <div id="toast" role="alert" aria-live="assertive"></div>
 
   <!-- Main card container -->
-  <div id="container">
-    <!-- İçerik JS ile yüklənəcək -->
-  </div>
+  <div id="container"></div>
 
   <!-- Lottie animation -->
   <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
@@ -486,65 +462,7 @@
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
   <script>
-    // ======== Dil dəstəyi üçün tərcümə obyektləri ========
-    const translations = {
-      az: {
-        selectTopic: "Quiz Mövzularını Seçin",
-        startTopic: "Başlanğıc mövzusu:",
-        back: "‹ Geri",
-        toastErrorIP: "Sizin IP icazəli deyil!",
-        topicLabels: {
-          program: "Proqramlaşdırma",
-          linear: "Xətti Cəbr",
-          xdiak: "XDIAK",
-          diff: "Diferensial"
-        },
-        quizTitleMap: {
-          program: "Proqramlaşdırma suallarını seç:",
-          linear: "Xətti Cəbr suallarını seç:",
-          xdiak: "XDIAK suallarını seç:",
-          diff: "Diferensial suallarını seç:"
-        }
-      },
-      en: {
-        selectTopic: "Choose Quiz Topics",
-        startTopic: "Starting topic:",
-        back: "‹ Back",
-        toastErrorIP: "Your IP is not allowed!",
-        topicLabels: {
-          program: "Programming",
-          linear: "Linear Algebra",
-          xdiak: "XDIAK",
-          diff: "Differential"
-        },
-        quizTitleMap: {
-          program: "Select Programming Questions:",
-          linear: "Select Linear Algebra Questions:",
-          xdiak: "Select XDIAK Questions:",
-          diff: "Select Differential Questions:"
-        }
-      },
-      ru: {
-        selectTopic: "Выберите тему викторины",
-        startTopic: "Начальная тема:",
-        back: "‹ Назад",
-        toastErrorIP: "Ваш IP не разрешен!",
-        topicLabels: {
-          program: "Программирование",
-          linear: "Линейная алгебра",
-          xdiak: "XDIAK",
-          diff: "Дифференциальное"
-        },
-        quizTitleMap: {
-          program: "Выберите вопросы по программированию:",
-          linear: "Выберите вопросы по линейной алгебре:",
-          xdiak: "Выберите вопросы XDIAK:",
-          diff: "Выберите вопросы по дифференциальному:"
-        }
-      }
-    };
-
-    // ======== Quiz məlumatları ========
+    // ======== Quiz məlumatları (AZ) ========
     const quizData = {
       program: [
         { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
@@ -586,74 +504,47 @@
     const loader = document.getElementById("loader");
     const clickAudio = document.getElementById("clickSound");
     const toggleBtn = document.getElementById("darkToggle");
-    const langSelect = document.getElementById("langSelect");
     const headerTitle = document.getElementById("headerTitle");
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // Cari dilin açarı
-    function getCurrentLang() {
-      return localStorage.getItem("language") || "az";
-    }
-
-    // Dil üzrə bütün mətnləri yeniləyir
-    function loadLanguage(lang) {
-      document.documentElement.lang = lang;
-      const t = translations[lang];
-      headerTitle.textContent = t.selectTopic;
-      // Əsas başlanğıc menyunu qur
-      renderMainMenu();
-    }
-
-    // Əsas menyunu render edən funksiya
+    // Əsas menyunu render edən funksiya (AZ)
     function renderMainMenu() {
-      const lang = getCurrentLang();
-      const t = translations[lang];
       container.classList.remove("has-back", "hidden");
       container.innerHTML =
-        '<p class="section-title">' +
-        t.startTopic +
-        "</p>" +
-        '<button class="start-btn" data-topic="program">' +
-        t.topicLabels.program +
-        "</button>" +
-        '<button class="start-btn" data-topic="linear">' +
-        t.topicLabels.linear +
-        "</button>" +
-        '<button class="start-btn" data-topic="xdiak">' +
-        t.topicLabels.xdiak +
-        "</button>" +
-        '<button class="start-btn" data-topic="diff">' +
-        t.topicLabels.diff +
-        "</button>";
+        '<p class="section-title">Başlanğıc mövzu:</p>' +
+        '<button class="start-btn" data-topic="program">Proqramlaşdırma</button>' +
+        '<button class="start-btn" data-topic="linear">Xətti Cəbr</button>' +
+        '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
+        '<button class="start-btn" data-topic="diff">Diferensial</button>';
       attachButtonEffects();
     }
 
-    // Back düyməsini və quiz düymələrini render edən funksiya
+    // Back düyməsini və quiz düymələrini render edən funksiya (AZ)
     function startQuiz(topic) {
       if (!userAllowed) return;
       localStorage.setItem("lastTopic", topic);
-      const lang = getCurrentLang();
-      const t = translations[lang];
 
       container.classList.add("hidden");
       setTimeout(() => {
         container.classList.remove("has-back", "hidden");
         container.classList.add("has-back");
         container.innerHTML =
-          '<button class="back-btn" aria-label="' +
-          t.back +
-          '">' +
-          t.back +
-          "</button>" +
+          '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
           '<p class="section-title">' +
-          t.quizTitleMap[topic] +
+          (topic === "program"
+            ? "Proqramlaşdırma suallarını seç:"
+            : topic === "linear"
+            ? "Xətti Cəbr suallarını seç:"
+            : topic === "xdiak"
+            ? "XDIAK suallarını seç:"
+            : "Diferensial suallarını seç:") +
           "</p>";
 
         const btnContainer = document.createElement("div");
         btnContainer.id = "btn-container";
 
-        quizData[topic].forEach((item, index) => {
+        quizData[topic].forEach((item) => {
           const btn = document.createElement("button");
           btn.className = "quiz-btn";
           btn.textContent = item.label;
@@ -669,7 +560,6 @@
 
     // Quiz açan funksiya
     function openQuiz(link, btn) {
-      // Button loader effekti
       btn.classList.add("btn-loading");
       if (isiOS) {
         const existingModal = document.getElementById("modal-overlay");
@@ -739,7 +629,7 @@
       }
     }
 
-    // Toast göstərən funksiya
+    // Toast göstərən funksiya (AZ)
     function showToast(message, type = "info") {
       toast.textContent = message;
       toast.className = "";
@@ -778,7 +668,7 @@
       });
     }
 
-    // IP yoxlayır
+    // IP yoxlayır (AZ)
     async function checkIP() {
       try {
         const res = await fetch("https://api.ipify.org?format=json");
@@ -789,8 +679,7 @@
         );
         if (!userAllowed) {
           container.style.display = "none";
-          const msg = translations[getCurrentLang()].toastErrorIP;
-          showToast(msg, "error");
+          showToast("Sizin IP icazəli deyil!", "error");
         }
       } catch (err) {
         console.error("Xəta baş verdi:", err);
@@ -826,24 +715,11 @@
       });
     }
 
-    // Dil seçimini idarə edir
-    function initializeLanguageSelector() {
-      const savedLang = getCurrentLang();
-      langSelect.value = savedLang;
-      loadLanguage(savedLang);
-      langSelect.addEventListener("change", (e) => {
-        const newLang = e.target.value;
-        localStorage.setItem("language", newLang);
-        loadLanguage(newLang);
-      });
-    }
-
     // Başlanğıcda çağırılan init funksiyası
     document.addEventListener("DOMContentLoaded", () => {
       initializeTheme();
       initializeLoader();
-      initializeLanguageSelector();
-      // Əgər istifadəçi daha əvvəl mövzu seçibsə, avtomatik açırıq
+      renderMainMenu();
       const lastTopic = localStorage.getItem("lastTopic");
       if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
     });
