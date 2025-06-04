@@ -50,25 +50,25 @@
       overflow-x: hidden;
       transition: background 0.4s ease, color 0.4s ease;
     }
+    /* Başlıq üçün yeni fade-in animasiyası */
     h1 {
       margin-bottom: 20px;
       font-weight: 600;
       font-size: 2rem;
       text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 3px solid var(--text-color);
-      width: 0;
-      animation:
-        typing 1.5s steps(20, end) forwards,
-        blink-caret 0.75s step-end infinite;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeIn 1s ease-out forwards;
     }
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes blink-caret {
-      50% { border-color: transparent; }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     #loader {
@@ -350,8 +350,10 @@
     <div class="spinner"></div>
   </div>
 
+  <!-- Dark mode toggle -->
   <button id="darkToggle" class="dark-toggle">🌙</button>
 
+  <!-- Bu başlıq artıq typing animasiyasından məhrum edildi və fadeIn ilə əvəz olundu -->
   <h1>Quiz Mövzularını Seçin</h1>
 
   <div id="toast">REDDOLL!!!</div>
@@ -561,14 +563,12 @@
       if (existingIframe) existingIframe.remove();
 
       if (isiOS) {
-
         const overlay = document.createElement("div");
         overlay.id = "modal-overlay";
         overlay.className = "modal-overlay";
 
         const modal = document.createElement("div");
         modal.className = "modal-content";
-
 
         const closeBtn = document.createElement("button");
         closeBtn.className = "close-modal";
@@ -589,7 +589,6 @@
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
       } else {
-
         const iframe = document.createElement("iframe");
         iframe.src = link;
         iframe.id = "fullscreen-quiz";
