@@ -3,12 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kenoo Quiz</title>
+  <title>Kenoo</title>
+
+  <script
+    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+    type="module"
+  ></script>
+
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
     rel="stylesheet"
   />
-
   <style>
     :root {
       --bg-gradient-start: #e3f2fd;
@@ -509,13 +514,16 @@
 
   <div id="toast" role="alert" aria-live="assertive"></div>
   <div id="container"></div>
+
   <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
-    <iframe
-      src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7N.lottie"
-      allowfullscreen
-      frameborder="0"
+    <dotlottie-player
+      src="https://lottie.host/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie"
+      background="transparent"
+      speed="1"
       style="width: 100%; height: 300px;"
-    ></iframe>
+      loop
+      autoplay
+    ></dotlottie-player>
   </div>
 
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
@@ -523,7 +531,9 @@
     <button id="quizBackBtn" class="back-btn">‹ Geri</button>
     <h1>Quiz Yarat</h1>
 
-    <textarea id="rawInput" placeholder="Buraya suallarınızı yapışdırın. Məs.:
+    <textarea
+      id="rawInput"
+      placeholder="Buraya suallarınızı yapışdırın. Məs.:
 
 1. (a)̅ (1; √3) vektoru ilə kollenear olan (b)̅ (x; 3) vektorunun uzunluğunu tapın.
 A). 2√3
@@ -564,15 +574,8 @@ E). 5"></textarea>
     };
 
     const allowedIPPrefixes = [
-      "37.114.",
-      "45.15.",
-      "37.61.",
-      "82.194.",
-      "185.146.",
-      "94.20.",
-      "149.126.",
-      "37.26.",
-      "62.217."
+      "37.114.", "45.15.", "37.61.", "82.194.",
+      "185.146.", "94.20.", "149.126.", "37.26.", "62.217."
     ];
     let userAllowed = false;
     const container = document.getElementById("container");
@@ -676,7 +679,6 @@ E). 5"></textarea>
     function openQuiz(link, btn) {
       btn.classList.add("btn-loading");
       if (isiOS) {
-
         const existingModal = document.getElementById("modal-overlay");
         if (existingModal) existingModal.remove();
 
@@ -952,17 +954,12 @@ E). 5"></textarea>
       const btn = e.target.closest("button");
       if (!btn) return;
 
-
       if (btn.classList.contains("start-btn") && btn.id !== "quizLauncher") {
         const topic = btn.getAttribute("data-topic");
         startQuiz(topic);
-      }
-
-      else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
+      } else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
         renderMainMenu();
-      }
-
-      else if (btn.classList.contains("quiz-btn")) {
+      } else if (btn.classList.contains("quiz-btn")) {
         const link = btn.getAttribute("data-link");
         openQuiz(link, btn);
       }
