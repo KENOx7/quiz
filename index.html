@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <!-- Mobil cihazlarda düzgün miqyas üçün metatag -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kenoo</title>
-  <!-- Google Fonts: Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <!-- MathJax yüklənməsi (LaTeX render üçün) -->
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
   <style>
-    /* ===== CSS Dəyişənləri (Dark/Light Mode) ===== */
     :root {
       --bg-gradient-start: #e3f2fd;
       --bg-gradient-end: #ffffff;
@@ -21,7 +19,10 @@
       --btn-primary-end: #1e88e5;
       --btn-secondary-start: #ffb74d;
       --btn-secondary-end: #ffa726;
-      --toast-bg: #d32f2f;
+      --toast-info-bg: #333;
+      --toast-success-bg: #388e3c;
+      --toast-error-bg: #d32f2f;
+      --toast-warning-bg: #f57c00;
       --toast-text: #fff;
     }
     body.dark {
@@ -34,19 +35,25 @@
       --btn-primary-end: #357ab7;
       --btn-secondary-start: #f5a25d;
       --btn-secondary-end: #e07d24;
-      --toast-bg: #ff5252;
+      --toast-info-bg: #555;
+      --toast-success-bg: #4caf50;
+      --toast-error-bg: #ff5252;
+      --toast-warning-bg: #ff9800;
       --toast-text: #fff;
     }
 
-    /* ===== Ümumi Tərtibat ===== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+      font-family: "Poppins", Arial, sans-serif;
+      background: linear-gradient(
+        135deg,
+        var(--bg-gradient-start) 0%,
+        var(--bg-gradient-end) 100%
+      );
       color: var(--text-color);
       display: flex;
       flex-direction: column;
@@ -55,36 +62,52 @@
       padding: 20px;
       overflow-x: hidden;
       transition: background 0.4s ease, color 0.4s ease;
+      position: relative;
     }
+
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      z-index: 1000;
+      transition: top 0.3s;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
     h1 {
       margin-bottom: 20px;
       font-weight: 600;
       font-size: 2rem;
       text-align: center;
-      white-space: nowrap;
-      overflow: hidden;
-      border-right: 3px solid var(--text-color);
-      width: 0;
-      animation:
-        typing 1.5s steps(20, end) forwards,
-        blink-caret 0.75s step-end infinite;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeIn 1s ease-out forwards;
     }
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    @keyframes blink-caret {
-      50% { border-color: transparent; }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    /* ===== Loading Spinner ===== */
     #loader {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255, 255, 255, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -104,10 +127,11 @@
       animation: spin 1s linear infinite;
     }
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
-    /* ===== Container & Fade-In/Fade-Out ===== */
     #container {
       width: 100%;
       max-width: 600px;
@@ -133,7 +157,6 @@
       margin-bottom: 16px;
     }
 
-    /* ===== “Geri” Düyməsi ===== */
     .back-btn {
       position: absolute;
       top: 16px;
@@ -156,19 +179,23 @@
       padding-top: 50px;
     }
 
-    /* ===== Başlanğıc Düymələri ===== */
     .start-btn {
       position: relative;
       padding: 14px 28px;
       margin: 8px;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--btn-primary-start) 0%, var(--btn-primary-end) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--btn-primary-start) 0%,
+        var(--btn-primary-end) 100%
+      );
       color: #fff;
       cursor: pointer;
       font-size: 1rem;
       font-weight: 600;
-      transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      transition: background 0.3s ease, box-shadow 0.3s ease,
+        transform 0.2s ease;
       box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
       overflow: hidden;
     }
@@ -178,39 +205,54 @@
       transform: scale(1.03);
     }
 
-    /* ===== Quiz Seçim Düymələri ===== */
     #btn-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 12px;
       margin-top: 20px;
     }
     .quiz-btn {
       position: relative;
-      flex: 1 1 120px;
-      max-width: 160px;
       padding: 12px 20px;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--btn-secondary-start) 0%, var(--btn-secondary-end) 100%);
+      background: linear-gradient(
+        135deg,
+        var(--btn-secondary-start) 0%,
+        var(--btn-secondary-end) 100%
+      );
       color: #fff;
       cursor: pointer;
       font-size: 0.95rem;
       font-weight: 600;
-      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+      transition: background 0.3s ease, transform 0.2s ease,
+        box-shadow 0.3s ease, opacity 0.4s ease;
       box-shadow: 0 4px 12px rgba(255, 183, 77, 0.4);
       text-align: center;
       opacity: 0;
-      animation: slide-down 0.5s forwards ease-out;
+      animation: slideDown 0.5s forwards ease-out;
     }
-    .quiz-btn:nth-child(1) { animation-delay: 0.2s; }
-    .quiz-btn:nth-child(2) { animation-delay: 0.35s; }
-    .quiz-btn:nth-child(3) { animation-delay: 0.5s; }
-    .quiz-btn:nth-child(4) { animation-delay: 0.65s; }
-    @keyframes slide-down {
-      from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .quiz-btn:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    .quiz-btn:nth-child(2) {
+      animation-delay: 0.35s;
+    }
+    .quiz-btn:nth-child(3) {
+      animation-delay: 0.5s;
+    }
+    .quiz-btn:nth-child(4) {
+      animation-delay: 0.65s;
+    }
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .quiz-btn:hover {
       background: linear-gradient(135deg, var(--btn-secondary-end) 0%, #fb8c00 100%);
@@ -218,26 +260,24 @@
       box-shadow: 0 6px 16px rgba(255, 183, 77, 0.5);
     }
 
-    /* ===== Ripple Effekti ===== */
     button {
       overflow: hidden;
     }
     .ripple {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255,255,255,0.6);
+      background: rgba(255, 255, 255, 0.6);
       transform: scale(0);
-      animation: ripple-effect 0.6s linear;
+      animation: rippleEffect 0.6s linear;
     }
-    @keyframes ripple-effect {
+    @keyframes rippleEffect {
       to {
         transform: scale(4);
         opacity: 0;
       }
     }
 
-    /* ===== Iframe tərtibatı ===== */
-    iframe {
+    iframe.fullscreen-quiz {
       width: 100%;
       height: 60vh;
       border: none;
@@ -246,17 +286,59 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
-    /* ===== Xəta Mesajı (Toast) ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      position: relative;
+      width: 90vw;
+      height: 90vh;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .modal-content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .close-modal {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 10001;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
     #toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%) translateY(100%);
-      background-color: var(--toast-bg);
+      background-color: var(--toast-info-bg);
       color: var(--toast-text);
       padding: 12px 24px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: transform 0.4s ease, opacity 0.4s ease;
       opacity: 0;
       z-index: 10000;
@@ -265,8 +347,19 @@
       transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
+    #toast.info {
+      background-color: var(--toast-info-bg);
+    }
+    #toast.success {
+      background-color: var(--toast-success-bg);
+    }
+    #toast.error {
+      background-color: var(--toast-error-bg);
+    }
+    #toast.warning {
+      background-color: var(--toast-warning-bg);
+    }
 
-    /* ===== Dark Mode Toggle Düyməsi ===== */
     .dark-toggle {
       position: fixed;
       top: 16px;
@@ -283,12 +376,12 @@
       color: var(--text-color);
       font-size: 1rem;
       transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      z-index: 1001;
     }
     .dark-toggle:hover {
-      background-color: rgba(0,0,0,0.1);
+      background-color: rgba(0, 0, 0, 0.1);
     }
 
-    /* ===== Mobil optimallaşdırma ===== */
     @media (max-width: 600px) {
       body {
         padding: 10px;
@@ -303,7 +396,8 @@
       #container.has-back {
         padding-top: 45px;
       }
-      .start-btn, .quiz-btn {
+      .start-btn,
+      .quiz-btn {
         width: 100%;
         max-width: unset;
         font-size: 1rem;
@@ -312,153 +406,78 @@
       #btn-container {
         gap: 8px;
       }
-      iframe {
+      iframe.fullscreen-quiz {
         height: 50vh;
       }
-    }
-
-    /* ===== Quiz Generator üçün əlavə stil ===== */
-    /* Ümumi konteyner gizlidir, əsas menyüdən sonra aktivləşir */
-    #generator-container {
-      display: none;
-      width: 100%;
-      max-width: 800px;
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      box-shadow: 0 8px 20px var(--card-shadow);
-      padding: 30px 20px;
-      margin-top: 20px;
-      position: relative;
-    }
-    /* Quiz Generator məzmun stili */
-    #generator-container h1 {
-      animation: none;
-      border: none;
-      width: 100%;
-      font-size: 1.75rem;
-      white-space: normal;
-      overflow: visible;
-      border-right: none;
-    }
-    #generator-container textarea {
-      width: 100%;
-      height: 240px;
-      resize: vertical;
-      font-size: 16px;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background: #fff;
-      white-space: pre-wrap;
-    }
-    #generator-container .btn {
-      display: inline-block;
-      padding: 10px 20px;
-      margin-bottom: 20px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      text-align: center;
-    }
-    #generator-container .btn:hover {
-      background: #0056b3;
-    }
-    #generator-container .question-container {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-    #generator-container .question-text {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-    #generator-container .options-list {
-      list-style: none;
-      padding: 0;
-    }
-    #generator-container .options-list li {
-      margin-bottom: 8px;
-    }
-    #generator-container .correct-answer {
-      color: green;
-      font-weight: bold;
-    }
-    #generator-container .wrong-answer {
-      color: red;
-      font-weight: bold;
-    }
-    #generator-container .result {
-      margin-top: 30px;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-    }
-    #generator-container .options-list input[type="radio"][disabled] + span {
-      opacity: 0.6;
-    }
-    /* Generator üçün “Geri” düyməsi */
-    #generator-container .back-btn {
-      top: 16px;
-      left: 16px;
+      .dark-toggle {
+        top: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Loading Spinner -->
+  <a href="#container" class="skip-link">Quiz-ə keç</a>
   <div id="loader">
     <div class="spinner"></div>
   </div>
 
-  <!-- Dark Mode Toggle -->
-  <button id="darkToggle" class="dark-toggle">🌙</button>
+  <button id="darkToggle" class="dark-toggle" aria-label="Dark rejimi dəyişdir">🌙</button>
 
-  <!-- Başlıq (Typing Effect) -->
-  <h1>Quiz Mövzularını Seçin</h1>
+  <h1 id="headerTitle">Quiz Mövzularını Seçin</h1>
 
-  <!-- Toast Bildiriş -->
-  <div id="toast">Sizin IP icazəli deyil!</div>
+  <div id="toast" role="alert" aria-live="assertive"></div>
 
-  <!-- Əsas Kontent -->
-  <div id="container">
-    <p class="section-title">Başlanğıc mövzusu:</p>
-    <button class="start-btn" onclick="startQuiz('proqramlasdirma')">Proqramlaşdırma</button>
-    <button class="start-btn" onclick="startQuiz('xetti')">Xətti Cəbr</button>
-    <button class="start-btn" onclick="startQuiz('xdiak')">XDIAK</button>
-    <button class="start-btn" onclick="startQuiz('diferensial')">Diferensial</button>
-    <!-- Yeni düymə: Quiz Generator -->
-    <button class="start-btn" onclick="showGenerator()">Quiz</button>
+  <div id="container"></div>
+
+  <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
+    <iframe
+      src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie"
+      allowfullscreen
+      frameborder="0"
+      style="width: 100%; height: 300px;"
+    ></iframe>
   </div>
 
-  <!-- Quiz-ləri açmaq üçün iframe əlavə olunur -->
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
-  <!-- Quiz Generator konteyneri -->
-  <div id="generator-container">
-    <button class="back-btn" onclick="hideGenerator()">‹ Geri</button>
-    <h1>Quiz</h1>
-    <!-- Sualları bu textarea'ya yapışdırın -->
-    <textarea id="rawInput" placeholder="1. (a)̅ (1; √3) vektoru ilə kollenear olan (b)̅ (x; 3) vektorunun uzunluğunu tapın.
-A). 2√3
-B). √3
-C). 3√3
-D). 4
-E). 5"></textarea>
-    <button id="parseQuiz" class="btn">Quiz Hazırla</button>
-    <div id="quiz"></div>
-    <button id="submitQuiz" class="btn" style="display:none;">Cavabları Yoxla</button>
-    <div id="result" class="result"></div>
-  </div>
-
   <script>
+    const quizData = {
+      program: [
+        { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
+        { label: "111-220", link: "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d" },
+        { label: "221-350", link: "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f" }
+      ],
+      linear: [
+        { label: "1-111", link: "https://quizizz.com/embed/quiz/683f58989ba449e01c456667" },
+        { label: "112-218", link: "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1" },
+        { label: "219-320", link: "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082" }
+      ],
+      xdiak: [
+        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481" },
+        { label: "101-200", link: "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5" },
+        { label: "201-300", link: "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2" },
+        { label: "301-425", link: "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7" }
+      ],
+      diff: [
+        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1" },
+        { label: "101-205", link: "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf" },
+        { label: "206-301", link: "https://quizizz.com/embed/quiz/683f60d33740abec43503e14" }
+      ]
+    };
+
     const allowedIPPrefixes = [
-      "37.114.", "45.15.", "37.61.", "82.194.",
-      "185.146.", "94.20.", "149.126.", "37.26.", "62.217."
+      "37.114.",
+      "45.15.",
+      "37.61.",
+      "82.194.",
+      "185.146.",
+      "94.20.",
+      "149.126.",
+      "37.26.",
+      "62.217."
     ];
     let userAllowed = false;
     const container = document.getElementById("container");
@@ -466,397 +485,230 @@ E). 5"></textarea>
     const loader = document.getElementById("loader");
     const clickAudio = document.getElementById("clickSound");
     const toggleBtn = document.getElementById("darkToggle");
-    const generatorContainer = document.getElementById("generator-container");
+    const headerTitle = document.getElementById("headerTitle");
 
-    // iOS yoxlaması (amma artıq iframe proxy-ə yönələcək, blok olmayacaq)
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-    // localStorage-dan son mövzunu yüklə
-    document.addEventListener("DOMContentLoaded", () => {
-      const lastTopic = localStorage.getItem("lastTopic");
-      // Dark mode yoxlaması
-      const currentMode = localStorage.getItem("theme");
-      if (currentMode === "dark") {
-        document.body.classList.add("dark");
-        toggleBtn.textContent = "☀️";
-      }
-      if (lastTopic) {
-        // Səhifə yüklənəndə azacıq gecikmə verərək əvvəlki mövzunu açırıq
-        setTimeout(() => startQuiz(lastTopic), 800);
-      }
-    });
-
-    // Səhifə tam yüklənəndə loader-i gizlət
-    window.addEventListener("load", () => {
-      loader.classList.add("hidden");
-      setTimeout(() => loader.style.display = "none", 300);
-    });
-
-    // IP yoxlaması
-    async function checkIP() {
-      try {
-        const res = await fetch('https://api.ipify.org?format=json');
-        const data = await res.json();
-        const userIP = data.ip;
-        userAllowed = allowedIPPrefixes.some(prefix => userIP.startsWith(prefix));
-        if (!userAllowed) {
-          container.style.display = "none";
-          showToast("Sizin IP icazəli deyil!");
-        }
-      } catch (err) {
-        console.error("Xəta baş verdi:", err);
-      }
-    }
-
-    // Toast göstərən funksiya
-    function showToast(message) {
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 3000);
-    }
-
-    // Dark mode toggle funksiyası
-    toggleBtn.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-        toggleBtn.textContent = "☀️";
-      } else {
-        localStorage.setItem("theme", "light");
-        toggleBtn.textContent = "🌙";
-      }
-    });
-
-    // Ripple effekti əlavə et
-    function addRippleEffect(btn) {
-      btn.addEventListener("click", function(e) {
-        const rect = btn.getBoundingClientRect();
-        const circle = document.createElement("span");
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        circle.style.width = circle.style.height = size + 'px';
-        circle.style.left = x + 'px';
-        circle.style.top = y + 'px';
-        circle.classList.add("ripple");
-        const ripple = btn.getElementsByClassName("ripple")[0];
-        if (ripple) ripple.remove();
-        btn.appendChild(circle);
-      });
-    }
-    // Bütün düymələrə ripple effekti və audio əlavə et
-    document.addEventListener("DOMContentLoaded", () => {
-      document.querySelectorAll("button").forEach(button => {
-        addRippleEffect(button);
-        button.addEventListener("click", () => {
-          clickAudio.currentTime = 0;
-          clickAudio.play();
-        });
-      });
-    });
-
-    // Əsas menyuya qayıt funksiyası
-    function showMainMenu() {
-      generatorContainer.style.display = "none";
-      container.style.display = "block";
-      container.classList.remove('has-back', 'hidden');
+    function renderMainMenu() {
+      container.classList.remove("has-back", "hidden");
       container.innerHTML =
-        '<p class="section-title">Başlanğıc mövzusu:</p>' +
-        '<button class="start-btn" onclick="startQuiz(\'proqramlasdirma\')">Proqramlaşdırma</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'xetti\')">Xətti Cəbr</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'xdiak\')">XDIAK</button>' +
-        '<button class="start-btn" onclick="startQuiz(\'diferensial\')">Diferensial</button>' +
-        '<button class="start-btn" onclick="showGenerator()">Quiz</button>';
-      document.querySelectorAll("button").forEach(button => {
-        addRippleEffect(button);
-        button.addEventListener("click", () => {
-          clickAudio.currentTime = 0;
-          clickAudio.play();
-        });
-      });
+        '<p class="section-title">Başlanğıc mövzu:</p>' +
+        '<button class="start-btn" data-topic="program">Proqramlaşdırma</button>' +
+        '<button class="start-btn" data-topic="linear">Xətti Cəbr</button>' +
+        '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
+        '<button class="start-btn" data-topic="diff">Diferensial</button>';
+      attachButtonEffects();
     }
 
-    // Mövzu seçimi funksiyası
     function startQuiz(topic) {
       if (!userAllowed) return;
-
       localStorage.setItem("lastTopic", topic);
-      const titleTextMap = {
-        'proqramlasdirma': 'Proqramlaşdırma suallarını seç:',
-        'xetti': 'Xətti Cəbr suallarını seç:',
-        'xdiak': 'XDİAK suallarını seç:',
-        'diferensial': 'Diferensial suallarını seç:'
-      };
-      const linksMap = {
-        'proqramlasdirma': [
-          "683dddfd79bab9c70d96170f",
-          "683dde151f8214ac74f7703d",
-          "683dde314708a5aad48cb67f"
-        ],
-        'xetti': [
-          "683f58989ba449e01c456667",
-          "683f58af9413297320bc29f1",
-          "683f58c21258dca9091f1082"
-        ],
-        'xdiak': [
-          "683f5cf4c777386684e14481",
-          "683f5d1279bab9c70d96c2b5",
-          "683f5d2eeee6434cec6396e2",
-          "683f5d50eee6434cec6396e7"
-        ],
-        'diferensial': [
-          "683f60a44708a5aad48d66d1",
-          "683f60b29413297320bc2baf",
-          "683f60d33740abec43503e14"
-        ]
-      };
-      const labelsMap = {
-        'proqramlasdirma': ["1-110", "111-220", "221-350"],
-        'xetti': ["1-111", "112-218", "219-320"],
-        'xdiak': ["1-100", "101-200", "201-300", "301-425"],
-        'diferensial': ["1-100", "101-205", "206-301"]
-      };
 
       container.classList.add("hidden");
       setTimeout(() => {
         container.classList.remove("has-back", "hidden");
         container.classList.add("has-back");
         container.innerHTML =
-          '<button class="back-btn" onclick="showMainMenu()">‹ Geri</button>' +
-          '<p class="section-title">' + (titleTextMap[topic] || 'Bölmə tapılmadı') + '</p>';
+          '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
+          '<p class="section-title">' +
+          (topic === "program"
+            ? "Proqramlaşdırma suallarını seç:"
+            : topic === "linear"
+            ? "Xətti Cəbr suallarını seç:"
+            : topic === "xdiak"
+            ? "XDIAK suallarını seç:"
+            : "Diferensial suallarını seç:") +
+          "</p>";
 
         const btnContainer = document.createElement("div");
         btnContainer.id = "btn-container";
 
-        const links = linksMap[topic] || [];
-        const labels = labelsMap[topic] || [];
-
-        links.forEach((quizId, index) => {
+        quizData[topic].forEach((item) => {
           const btn = document.createElement("button");
           btn.className = "quiz-btn";
-          btn.textContent = labels[index];
-          btn.onclick = () => openQuizViaProxy(quizId);
+          btn.textContent = item.label;
+          btn.setAttribute("data-link", item.link);
           btnContainer.appendChild(btn);
         });
         container.appendChild(btnContainer);
 
         setTimeout(() => container.classList.remove("hidden"), 50);
-
-        const newButtons = container.querySelectorAll("button");
-        newButtons.forEach(button => {
-          addRippleEffect(button);
-          button.addEventListener("click", () => {
-            clickAudio.currentTime = 0;
-            clickAudio.play();
-          });
-        });
+        attachButtonEffects();
       }, 300);
     }
 
-    // Quiz-i proxy vasitəsilə in-page iframe-də açan funksiya
-    function openQuizViaProxy(quizId) {
-      const existingIframe = document.getElementById("quiz-iframe");
-      if (existingIframe) existingIframe.remove();
+    function openQuiz(link, btn) {
+      btn.classList.add("btn-loading");
+      if (isiOS) {
+        const existingModal = document.getElementById("modal-overlay");
+        if (existingModal) existingModal.remove();
 
-      const iframe = document.createElement("iframe");
-      iframe.src = `http://localhost:3000/quiz-proxy/${quizId}`;
-      iframe.id = "quiz-iframe";
-      iframe.allow = "fullscreen";
-      iframe.allowFullscreen = true;
-      iframe.setAttribute("webkitallowfullscreen", "");
-      iframe.setAttribute("mozallowfullscreen", "");
+        const overlay = document.createElement("div");
+        overlay.id = "modal-overlay";
+        overlay.className = "modal-overlay";
 
-      document.body.appendChild(iframe);
-    }
+        const modal = document.createElement("div");
+        modal.className = "modal-content";
 
-    // IP yoxlamasını səhifə yüklənəndə işə sal
-    window.onload = checkIP;
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "close-modal";
+        closeBtn.innerHTML = "✕";
+        closeBtn.onclick = () => {
+          document.body.removeChild(overlay);
+        };
 
-    /* ===== Quiz Generator üçün JS funksiyaları ===== */
+        const iframe = document.createElement("iframe");
+        iframe.src = link;
+        iframe.allow = "fullscreen";
+        iframe.allowFullscreen = true;
+        iframe.setAttribute("webkitallowfullscreen", "");
+        iframe.setAttribute("mozallowfullscreen", "");
 
-    // Fisher–Yates qarışdırma funksiyası
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
+        modal.appendChild(closeBtn);
+        modal.appendChild(iframe);
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+        btn.classList.remove("btn-loading");
+      } else {
+        const existingIframe = document.getElementById("fullscreen-quiz");
+        if (existingIframe) existingIframe.remove();
+
+        const iframe = document.createElement("iframe");
+        iframe.src = link;
+        iframe.id = "fullscreen-quiz";
+        iframe.className = "fullscreen-quiz";
+        iframe.allow = "fullscreen";
+        iframe.allowFullscreen = true;
+        iframe.loading = "lazy";
+        document.body.appendChild(iframe);
+
+        iframe.onload = () => {
+          btn.classList.remove("btn-loading");
+        };
+
+        if (iframe.requestFullscreen) iframe.requestFullscreen();
+        else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
+        else if (iframe.msRequestFullscreen) iframe.msRequestFullscreen();
+
+        document.addEventListener("fullscreenchange", handleExit);
+        document.addEventListener("webkitfullscreenchange", handleExit);
+        document.addEventListener("msfullscreenchange", handleExit);
       }
     }
 
-    // Unicode √ və combining overbar ̅ aşkar edib LaTeX-ə çevirən funksiya
-    function normalizeText(text) {
-      text = text.replace(/\(\s*a\s*\)\s*̅/g, '\\overrightarrow{a}');
-      text = text.replace(/\(\s*b\s*\)\s*̅/g, '\\overrightarrow{b}');
-      text = text.replace(/√\s*3/g, '\\sqrt{3}');
-      return text;
+    function handleExit() {
+      const iframe = document.getElementById("fullscreen-quiz");
+      if (!document.fullscreenElement && iframe) {
+        iframe.remove();
+        document.removeEventListener("fullscreenchange", handleExit);
+        document.removeEventListener("webkitfullscreenchange", handleExit);
+        document.removeEventListener("msfullscreenchange", handleExit);
+      }
     }
 
-    // "x^2/36" kimi fraqmentləri "\frac{x^{2}}{36}" formasına çevirən funksiya
-    function convertToLatexFraction(text) {
-      return text.replace(/([a-zA-Z])\^(\d+)\/(\d+)/g, function(match, v, exp, denom) {
-        return `\\frac{${v}^{${exp}}}{${denom}}`;
+    function showToast(message, type = "info") {
+      toast.textContent = message;
+      toast.className = "";
+      toast.classList.add("show", type);
+      setTimeout(() => {
+        toast.classList.remove("show", type);
+      }, 3000);
+    }
+
+    function addRippleEffect(btn) {
+      btn.addEventListener("click", function (e) {
+        const rect = btn.getBoundingClientRect();
+        const circle = document.createElement("span");
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        circle.style.width = circle.style.height = size + "px";
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+        circle.classList.add("ripple");
+        const ripple = btn.getElementsByClassName("ripple")[0];
+        if (ripple) ripple.remove();
+        btn.appendChild(circle);
       });
     }
 
-    // Mətn içində LaTeX əmrləri varsa wrap (əks halda plain) edən funksiya
-    function wrapMathIfNeeded(text) {
-      let normalized = normalizeText(text);
-      const fracConverted = convertToLatexFraction(normalized);
-      if (fracConverted !== text || /\\overrightarrow|\\sqrt/.test(normalized)) {
-        return `\\(${fracConverted}\\)`;
-      }
-      return text;
-    }
-
-    // Sual + variant bloklarını parse edən funksiya
-    function parseQuestionsFromText(rawText) {
-      const lines = rawText
-        .split(/\r?\n/)
-        .map(l => l.trim())
-        .filter(l => l !== "");
-      const questions = [];
-      let currentQ = null;
-
-      lines.forEach(line => {
-        const qMatch = line.match(/^(\d+)\.\s*(.+)$/);
-        if (qMatch) {
-          if (currentQ && currentQ.options.length >= 2) {
-            questions.push(currentQ);
-          }
-          currentQ = { question: qMatch[2].trim(), options: [] };
-          return;
-        }
-        const optMatch = line.match(/^[A-E]\)\.\s*(.+)$/i);
-        if (optMatch && currentQ) {
-          currentQ.options.push(optMatch[1].trim());
-        }
-      });
-      if (currentQ && currentQ.options.length >= 2) {
-        questions.push(currentQ);
-      }
-      return questions;
-    }
-
-    // Quiz-i yaradan funksiya
-    function buildQuiz(questionsData) {
-      const quizDiv = document.getElementById("quiz");
-      quizDiv.innerHTML = "";
-
-      const questions = JSON.parse(JSON.stringify(questionsData));
-      shuffleArray(questions);
-
-      questions.forEach((qObj, qIndex) => {
-        const opts = qObj.options.map((optText, idx) => ({
-          text: wrapMathIfNeeded(optText),
-          isCorrect: idx === 0
-        }));
-        shuffleArray(opts);
-
-        const container = document.createElement("div");
-        container.classList.add("question-container");
-
-        const questionEl = document.createElement("div");
-        questionEl.classList.add("question-text");
-        const wrappedQuestion = wrapMathIfNeeded(qObj.question);
-        questionEl.innerHTML = `<strong>${qIndex + 1}.</strong> ${wrappedQuestion}`;
-        container.appendChild(questionEl);
-
-        const ul = document.createElement("ul");
-        ul.classList.add("options-list");
-        opts.forEach(optObj => {
-          const li = document.createElement("li");
-          const label = document.createElement("label");
-
-          const radio = document.createElement("input");
-          radio.type = "radio";
-          radio.name = `question_${qIndex}`;
-          radio.value = optObj.isCorrect ? "true" : "false";
-
-          const spanText = document.createElement("span");
-          spanText.innerHTML = optObj.text;
-
-          label.appendChild(radio);
-          label.appendChild(spanText);
-          li.appendChild(label);
-          ul.appendChild(li);
+    function attachButtonEffects() {
+      document.querySelectorAll("button").forEach((button) => {
+        addRippleEffect(button);
+        button.addEventListener("click", () => {
+          clickAudio.currentTime = 0;
+          clickAudio.play();
         });
-        container.appendChild(ul);
-        quizDiv.appendChild(container);
       });
-
-      if (window.MathJax) {
-        MathJax.typesetPromise();
-      }
     }
 
-    // Cavabları yoxlayan funksiya
-    function showResults(numQuestions) {
-      const quizDiv = document.getElementById("quiz");
-      const containers = quizDiv.getElementsByClassName("question-container");
-      let score = 0;
-
-      for (let i = 0; i < containers.length; i++) {
-        const radios = containers[i].querySelectorAll(`input[name="question_${i}"]`);
-        radios.forEach(radio => {
-          const spanText = radio.nextSibling;
-          if (radio.value === "true") {
-            spanText.classList.add("correct-answer");
-          }
-          if (radio.checked && radio.value === "false") {
-            spanText.classList.add("wrong-answer");
-          }
-          radio.disabled = true;
-        });
-        const selected = containers[i].querySelector(`input[name="question_${i}"]:checked`);
-        if (selected && selected.value === "true") {
-          score++;
-        }
-      }
-
-      document.getElementById("result").textContent = `Sizin nəticəniz: ${score} / ${numQuestions}`;
-      document.getElementById("parseQuiz").disabled = false;
-      document.getElementById("submitQuiz").style.display = "none";
-    }
-
-    // “Quiz Hazırla” düyməsi klik edildikdə
-    document.getElementById("parseQuiz").addEventListener("click", () => {
-      const raw = document.getElementById("rawInput").value;
-      if (!raw.trim()) {
-        alert("Lütfən, sualları yazın.");
-        return;
-      }
-
-      const parsed = parseQuestionsFromText(raw);
-      if (parsed.length === 0) {
-        alert(
-          "Heç bir düzgün formatlı sual tapılmadı.\n" +
-          "Hər sual sətri “1. Sual mətni” ilə başlamalı, növbəti sətirlər isə “A). Variant” formasında olmalıdır."
+    async function checkIP() {
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        const userIP = data.ip;
+        userAllowed = allowedIPPrefixes.some((prefix) =>
+          userIP.startsWith(prefix)
         );
-        return;
+        if (!userAllowed) {
+          container.style.display = "none";
+          showToast("Sizin IP icazəli deyil!", "error");
+        }
+      } catch (err) {
+        console.error("Xəta baş verdi:", err);
       }
+    }
 
-      buildQuiz(parsed);
+    function initializeTheme() {
+      const currentMode = localStorage.getItem("theme");
+      if (currentMode === "dark") {
+        document.body.classList.add("dark");
+        toggleBtn.textContent = "☀️";
+      } else {
+        toggleBtn.textContent = "🌙";
+      }
+      toggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        if (document.body.classList.contains("dark")) {
+          localStorage.setItem("theme", "dark");
+          toggleBtn.textContent = "☀️";
+        } else {
+          localStorage.setItem("theme", "light");
+          toggleBtn.textContent = "🌙";
+        }
+      });
+    }
 
-      const submitBtn = document.getElementById("submitQuiz");
-      submitBtn.style.display = "inline-block";
-      submitBtn.disabled = false;
-      submitBtn.onclick = () => showResults(parsed.length);
+    function initializeLoader() {
+      window.addEventListener("load", () => {
+        loader.classList.add("hidden");
+        setTimeout(() => (loader.style.display = "none"), 300);
+      });
+    }
 
-      document.getElementById("parseQuiz").disabled = true;
-      document.getElementById("result").textContent = "";
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeTheme();
+      initializeLoader();
+      renderMainMenu();
+      const lastTopic = localStorage.getItem("lastTopic");
+      if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
     });
 
-    // Quiz Generator görünməsi
-    function showGenerator() {
-      container.style.display = "none";
-      generatorContainer.style.display = "block"
-    }
-    // Quiz Generator gizlədib əsas menyuya qayıt
-    function hideGenerator() {
-      generatorContainer.style.display = "none";
-      container.style.display = "block";
-    }
+    window.addEventListener("load", checkIP);
+
+    container.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      if (btn.classList.contains("start-btn")) {
+        const topic = btn.getAttribute("data-topic");
+        startQuiz(topic);
+      } else if (btn.classList.contains("back-btn")) {
+        renderMainMenu();
+      } else if (btn.classList.contains("quiz-btn")) {
+        const link = btn.getAttribute("data-link");
+        openQuiz(link, btn);
+      }
+    });
   </script>
 </body>
 </html>
