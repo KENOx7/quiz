@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kenoo</title>
+
+  <!-- Mövcud font və CSS dəyişənləri -->
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
     rel="stylesheet"
@@ -416,7 +418,83 @@
         font-size: 0.9rem;
       }
     }
+
+    /* --- Quiz Generator üçün əlavə CSS --- */
+    #quizGenerator {
+      display: none;
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20px;
+    }
+    #quizGenerator textarea {
+      width: 100%;
+      height: 240px;
+      resize: vertical;
+      font-size: 16px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: #fff;
+      white-space: pre-wrap;
+    }
+    #quizGenerator .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-bottom: 20px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+    }
+    #quizGenerator .btn:hover {
+      background: #0056b3;
+    }
+    #quizGenerator #quiz {
+      margin-top: 20px;
+    }
+    #quizGenerator .question-container {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    #quizGenerator .question-text {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    #quizGenerator .options-list {
+      list-style: none;
+      padding: 0;
+    }
+    #quizGenerator .options-list li {
+      margin-bottom: 8px;
+    }
+    #quizGenerator .correct-answer {
+      color: green;
+      font-weight: bold;
+    }
+    #quizGenerator .wrong-answer {
+      color: red;
+      font-weight: bold;
+    }
+    #quizGenerator .result {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+    #quizGenerator .options-list input[type="radio"][disabled] + span {
+      opacity: 0.6;
+    }
   </style>
+
+  <!-- MathJax yüklənməsi (LaTeX render üçün) -->
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <a href="#container" class="skip-link">Quiz-ə keç</a>
@@ -426,15 +504,19 @@
 
   <button id="darkToggle" class="dark-toggle" aria-label="Dark rejimi dəyişdir">🌙</button>
 
+  <!-- Əsas Başlıq və Yeni "Quiz" Düyməsi -->
   <h1 id="headerTitle">Quiz Mövzularını Seçin</h1>
+  <button id="quizLauncher" class="start-btn" style="margin-bottom: 20px;">Quiz</button>
 
   <div id="toast" role="alert" aria-live="assertive"></div>
 
+  <!-- Əsas Quiz Mövzuları üçün Konteyner -->
   <div id="container"></div>
 
+  <!-- Mövcud Lottie Animasiya -->
   <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
     <iframe
-      src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7.lottie"
+      src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7N.lottie"
       allowfullscreen
       frameborder="0"
       style="width: 100%; height: 300px;"
@@ -443,7 +525,26 @@
 
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 
+  <!-- Quiz Generator-in Gizli Konteyneri -->
+  <div id="quizGenerator">
+    <h1>Quiz yarad</h1>
+
+    <!-- Sualları bu textarea'ya yapışdırın -->
+    <textarea id="rawInput" placeholder="1. (a)̅ (1; √3) vektoru ilə kollenear olan (b)̅ (x; 3) vektorunun uzunluğunu tapın.
+A). 2√3
+B). √3
+C). 3√3
+D). 4
+E). 5"></textarea>
+
+    <button id="parseQuiz" class="btn">Quiz Hazırla</button>
+    <div id="quiz"></div>
+    <button id="submitQuiz" class="btn" style="display:none;">Cavabları Yoxla</button>
+    <div id="result" class="result"></div>
+  </div>
+
   <script>
+    // -------- Mövcud Quiz Mövzuları Kodu --------
     const quizData = {
       program: [
         { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
@@ -486,10 +587,13 @@
     const clickAudio = document.getElementById("clickSound");
     const toggleBtn = document.getElementById("darkToggle");
     const headerTitle = document.getElementById("headerTitle");
+    const quizLauncher = document.getElementById("quizLauncher");
+    const quizGenerator = document.getElementById("quizGenerator");
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
     function renderMainMenu() {
+      quizGenerator.style.display = "none";
       container.classList.remove("has-back", "hidden");
       container.innerHTML =
         '<p class="section-title">Başlanğıc mövzu:</p>' +
@@ -690,6 +794,8 @@
       initializeTheme();
       initializeLoader();
       renderMainMenu();
+
+      // Əvvəlki mövzu varsa, avtomatik aç
       const lastTopic = localStorage.getItem("lastTopic");
       if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
     });
@@ -699,7 +805,7 @@
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
-      if (btn.classList.contains("start-btn")) {
+      if (btn.classList.contains("start-btn") && btn.id !== "quizLauncher") {
         const topic = btn.getAttribute("data-topic");
         startQuiz(topic);
       } else if (btn.classList.contains("back-btn")) {
@@ -708,6 +814,190 @@
         const link = btn.getAttribute("data-link");
         openQuiz(link, btn);
       }
+    });
+
+    // -------- Yeni "Quiz" Düyməsinin Davranışı --------
+    quizLauncher.addEventListener("click", () => {
+      // Əsas menyunu gizlət
+      container.classList.add("hidden");
+      headerTitle.textContent = "Quiz yarad";
+
+      // Quiz Generator-i göstər
+      quizGenerator.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // -------- Quiz Generator Kodu --------
+
+    // Fisher–Yates qarışdırma funksiyası
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    // Unicode √ və combining overbar ̅ aşkar edib LaTeX-ə çevirən funksiya
+    function normalizeText(text) {
+      text = text.replace(/\(\s*a\s*\)\s*̅/g, '\\overrightarrow{a}');
+      text = text.replace(/\(\s*b\s*\)\s*̅/g, '\\overrightarrow{b}');
+      text = text.replace(/√\s*3/g, '\\sqrt{3}');
+      return text;
+    }
+
+    // "x^2/36" kimi fraqmentləri "\frac{x^{2}}{36}" formasına çevirən funksiya
+    function convertToLatexFraction(text) {
+      return text.replace(/([a-zA-Z])\^(\d+)\/(\d+)/g, function(match, v, exp, denom) {
+        return `\\frac{${v}^{${exp}}}{${denom}}`;
+      });
+    }
+
+    // Mətn içində LaTeX əmrləri varsa wrap edən funksiya
+    function wrapMathIfNeeded(text) {
+      let normalized = normalizeText(text);
+      const fracConverted = convertToLatexFraction(normalized);
+      if (fracConverted !== text || /\\overrightarrow|\\sqrt/.test(normalized)) {
+        return `\\(${fracConverted}\\)`;
+      }
+      return text;
+    }
+
+    // Sual + variant bloklarını parse edən funksiya
+    function parseQuestionsFromText(rawText) {
+      const lines = rawText
+        .split(/\r?\n/)
+        .map(l => l.trim())
+        .filter(l => l !== "");
+      const questions = [];
+      let currentQ = null;
+
+      lines.forEach(line => {
+        const qMatch = line.match(/^(\d+)\.\s*(.+)$/);
+        if (qMatch) {
+          if (currentQ && currentQ.options.length >= 2) {
+            questions.push(currentQ);
+          }
+          currentQ = { question: qMatch[2].trim(), options: [] };
+          return;
+        }
+        const optMatch = line.match(/^[A-E]\)\.\s*(.+)$/i);
+        if (optMatch && currentQ) {
+          currentQ.options.push(optMatch[1].trim());
+        }
+      });
+      if (currentQ && currentQ.options.length >= 2) {
+        questions.push(currentQ);
+      }
+      return questions;
+    }
+
+    // Quiz-i yaradan funksiya
+    function buildQuiz(questionsData) {
+      const quizDiv = document.getElementById("quiz");
+      quizDiv.innerHTML = "";
+
+      const questions = JSON.parse(JSON.stringify(questionsData));
+      shuffleArray(questions);
+
+      questions.forEach((qObj, qIndex) => {
+        const opts = qObj.options.map((optText, idx) => ({
+          text: wrapMathIfNeeded(optText),
+          isCorrect: idx === 0
+        }));
+        shuffleArray(opts);
+
+        const container = document.createElement("div");
+        container.classList.add("question-container");
+
+        const questionEl = document.createElement("div");
+        questionEl.classList.add("question-text");
+        const wrappedQuestion = wrapMathIfNeeded(qObj.question);
+        questionEl.innerHTML = `<strong>${qIndex + 1}.</strong> ${wrappedQuestion}`;
+        container.appendChild(questionEl);
+
+        const ul = document.createElement("ul");
+        ul.classList.add("options-list");
+        opts.forEach(optObj => {
+          const li = document.createElement("li");
+          const label = document.createElement("label");
+
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = `question_${qIndex}`;
+          radio.value = optObj.isCorrect ? "true" : "false";
+
+          const spanText = document.createElement("span");
+          spanText.innerHTML = optObj.text;
+
+          label.appendChild(radio);
+          label.appendChild(spanText);
+          li.appendChild(label);
+          ul.appendChild(li);
+        });
+        container.appendChild(ul);
+        quizDiv.appendChild(container);
+      });
+
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // Cavabları yoxlayan funksiya
+    function showResults(numQuestions) {
+      const quizDiv = document.getElementById("quiz");
+      const containers = quizDiv.getElementsByClassName("question-container");
+      let score = 0;
+
+      for (let i = 0; i < containers.length; i++) {
+        const radios = containers[i].querySelectorAll(`input[name="question_${i}"]`);
+        radios.forEach(radio => {
+          const spanText = radio.nextSibling;
+          if (radio.value === "true") {
+            spanText.classList.add("correct-answer");
+          }
+          if (radio.checked && radio.value === "false") {
+            spanText.classList.add("wrong-answer");
+          }
+          radio.disabled = true;
+        });
+        const selected = containers[i].querySelector(`input[name="question_${i}"]:checked`);
+        if (selected && selected.value === "true") {
+          score++;
+        }
+      }
+
+      document.getElementById("result").textContent = `Sizin nəticəniz: ${score} / ${numQuestions}`;
+      document.getElementById("parseQuiz").disabled = false;
+      document.getElementById("submitQuiz").style.display = "none";
+    }
+
+    // “Quiz Hazırla” düyməsi klik edildikdə
+    document.getElementById("parseQuiz").addEventListener("click", () => {
+      const raw = document.getElementById("rawInput").value;
+      if (!raw.trim()) {
+        alert("Lütfən, sualları yazın.");
+        return;
+      }
+
+      const parsed = parseQuestionsFromText(raw);
+      if (parsed.length === 0) {
+        alert(
+          "Heç bir düzgün formatlı sual tapılmadı.\n" +
+          "Hər sual sətri “1. Sual mətni” ilə başlamalı, növbəti sətirlər isə “A). Variant” formasında olmalıdır."
+        );
+        return;
+      }
+
+      buildQuiz(parsed);
+
+      const submitBtn = document.getElementById("submitQuiz");
+      submitBtn.style.display = "inline-block";
+      submitBtn.disabled = false;
+      submitBtn.onclick = () => showResults(parsed.length);
+
+      document.getElementById("parseQuiz").disabled = true;
+      document.getElementById("result").textContent = "";
     });
   </script>
 </body>
