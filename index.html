@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kenoo & Quiz</title>
+  <title>Kenoo</title>
 
   <!-- Mövcud font və CSS dəyişənləri -->
   <link
@@ -528,7 +528,8 @@
 
   <!-- Quiz Generator-in Gizli Konteyneri -->
   <div id="quizGenerator">
-    <button id="quizBackBtn" class="back-btn" style="position:absolute; top:16px; left:16px;">‹ Geri</button>
+    <!-- İndi bu düymə Quiz bölməsinin içində işləyəcək -->
+    <button id="quizBackBtn" class="back-btn">‹ Geri</button>
     <h1>Quiz yarad</h1>
 
     <!-- Sualları bu textarea'ya yapışdırın -->
@@ -591,11 +592,12 @@ E). 5"></textarea>
     const headerTitle = document.getElementById("headerTitle");
     const quizLauncher = document.getElementById("quizLauncher");
     const quizGenerator = document.getElementById("quizGenerator");
-    const quizBackBtn = document.getElementById("quizBackBtn");
+    // Qeyd: `quizBackBtn` hələ DOM yüklənməmişdən əldə edilə bilməz, ona görə observer edəcəyik.
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
     function renderMainMenu() {
+      // Quiz Generator-i gizlət, başlığı yenilə, əsas menyunu göstər
       quizGenerator.style.display = "none";
       headerTitle.textContent = "Quiz Mövzularını Seçin";
       container.classList.remove("has-back", "hidden");
@@ -606,6 +608,8 @@ E). 5"></textarea>
         '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
         '<button class="start-btn" data-topic="diff">Diferensial</button>';
       attachButtonEffects();
+      // Səhifənin yuxarısına qayıt
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function startQuiz(topic) {
@@ -738,15 +742,15 @@ E). 5"></textarea>
         if (ripple) ripple.remove();
         btn.appendChild(circle);
       });
+      btn.addEventListener("click", () => {
+        clickAudio.currentTime = 0;
+        clickAudio.play();
+      });
     }
 
     function attachButtonEffects() {
       document.querySelectorAll("button").forEach((button) => {
         addRippleEffect(button);
-        button.addEventListener("click", () => {
-          clickAudio.currentTime = 0;
-          clickAudio.play();
-        });
       });
     }
 
@@ -802,6 +806,12 @@ E). 5"></textarea>
       // Əvvəlki mövzu varsa, avtomatik aç
       const lastTopic = localStorage.getItem("lastTopic");
       if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
+
+      // Quiz Generator’dakı "‹ Geri" düyməsi üçün listener
+      const quizBackBtn = document.getElementById("quizBackBtn");
+      quizBackBtn.addEventListener("click", () => {
+        renderMainMenu();
+      });
     });
 
     window.addEventListener("load", checkIP);
@@ -809,12 +819,17 @@ E). 5"></textarea>
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if (!btn) return;
+      // Əsas menyudan mövzu seçilərkən:
       if (btn.classList.contains("start-btn") && btn.id !== "quizLauncher") {
         const topic = btn.getAttribute("data-topic");
         startQuiz(topic);
-      } else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
+      }
+      // Mövzu içindəki geri düyməsi:
+      else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
         renderMainMenu();
-      } else if (btn.classList.contains("quiz-btn")) {
+      }
+      // Quiz butonları:
+      else if (btn.classList.contains("quiz-btn")) {
         const link = btn.getAttribute("data-link");
         openQuiz(link, btn);
       }
@@ -822,19 +837,12 @@ E). 5"></textarea>
 
     // -------- Yeni "Quiz" Düyməsinin Davranışı --------
     quizLauncher.addEventListener("click", () => {
-      // Əsas menyunu gizlət
+      // Əsas menyunu gizlət, başlığı yenilə, Quiz bölməsini göstə
       container.classList.add("hidden");
       headerTitle.textContent = "Quiz yarad";
 
-      // Quiz Generator-i göstər və görünəcək vəziyyətə gətir
       quizGenerator.style.display = "block";
       quizGenerator.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-
-    // -------- "Geri" düyməsi (Quiz Generator üçün) --------
-    quizBackBtn.addEventListener("click", () => {
-      quizGenerator.style.display = "none";
-      renderMainMenu();
     });
 
     // -------- Quiz Generator Kodu --------
