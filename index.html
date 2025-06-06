@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kenoo</title>
-
-  <!-- Mövcud font və CSS dəyişənləri -->
+  <title>Kenoo Quiz</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
     rel="stylesheet"
   />
+
   <style>
     :root {
       --bg-gradient-start: #e3f2fd;
@@ -262,9 +261,6 @@
       box-shadow: 0 6px 16px rgba(255, 183, 77, 0.5);
     }
 
-    button {
-      overflow: hidden;
-    }
     .ripple {
       position: absolute;
       border-radius: 50%;
@@ -418,14 +414,21 @@
         font-size: 0.9rem;
       }
     }
-
-    /* --- Quiz Generator üçün əlavə CSS --- */
     #quizGenerator {
       display: none;
       width: 100%;
       max-width: 800px;
       margin-top: 20px;
       position: relative;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--card-shadow);
+      padding: 30px 20px;
+    }
+    #quizGenerator h1 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      text-align: center;
     }
     #quizGenerator textarea {
       width: 100%;
@@ -450,12 +453,10 @@
       cursor: pointer;
       font-size: 16px;
       text-align: center;
+      transition: background 0.3s ease;
     }
     #quizGenerator .btn:hover {
       background: #0056b3;
-    }
-    #quizGenerator #quiz {
-      margin-top: 20px;
     }
     #quizGenerator .question-container {
       background: #fff;
@@ -493,28 +494,21 @@
       opacity: 0.6;
     }
   </style>
-
-  <!-- MathJax yüklənməsi (LaTeX render üçün) -->
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <a href="#container" class="skip-link">Quiz-ə keç</a>
+
   <div id="loader">
     <div class="spinner"></div>
   </div>
 
   <button id="darkToggle" class="dark-toggle" aria-label="Dark rejimi dəyişdir">🌙</button>
-
-  <!-- Əsas Başlıq və Yeni "Quiz" Düyməsi -->
   <h1 id="headerTitle">Quiz Mövzularını Seçin</h1>
   <button id="quizLauncher" class="start-btn" style="margin-bottom: 20px;">Quiz</button>
 
   <div id="toast" role="alert" aria-live="assertive"></div>
-
-  <!-- Əsas Quiz Mövzuları üçün Konteyner -->
   <div id="container"></div>
-
-  <!-- Mövcud Lottie Animasiya -->
   <div class="lottie-wrapper" style="width: 100%; max-width: 400px; margin: 20px auto;">
     <iframe
       src="https://lottie.host/embed/bcde77c2-384c-4857-a3ca-91a809ea95cf/LQ4RoKH5N7N.lottie"
@@ -525,15 +519,13 @@
   </div>
 
   <audio id="clickSound" src="click.mp3" preload="auto"></audio>
-
-  <!-- Quiz Generator-in Gizli Konteyneri -->
   <div id="quizGenerator">
-    <!-- Burada onclick təqdim edirik -->
-    <button id="quizBackBtn" class="back-btn" onclick="renderMainMenu()">‹ Geri</button>
-    <h1>Quiz yarad</h1>
+    <button id="quizBackBtn" class="back-btn">‹ Geri</button>
+    <h1>Quiz Yarat</h1>
 
-    <!-- Sualları bu textarea'ya yapışdırın -->
-    <textarea id="rawInput" placeholder="1. (a)̅ (1; √3) vektoru ilə kollenear olan (b)̅ (x; 3) vektorunun uzunluğunu tapın.
+    <textarea id="rawInput" placeholder="Buraya suallarınızı yapışdırın. Məs.:
+
+1. (a)̅ (1; √3) vektoru ilə kollenear olan (b)̅ (x; 3) vektorunun uzunluğunu tapın.
 A). 2√3
 B). √3
 C). 3√3
@@ -547,7 +539,6 @@ E). 5"></textarea>
   </div>
 
   <script>
-    // -------- Mövcud Quiz Mövzuları Kodu --------
     const quizData = {
       program: [
         { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
@@ -592,11 +583,47 @@ E). 5"></textarea>
     const headerTitle = document.getElementById("headerTitle");
     const quizLauncher = document.getElementById("quizLauncher");
     const quizGenerator = document.getElementById("quizGenerator");
+    const quizBackBtn = document.getElementById("quizBackBtn");
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+    function addRippleEffect(btn) {
+      btn.addEventListener("click", function (e) {
+        const rect = btn.getBoundingClientRect();
+        const circle = document.createElement("span");
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        circle.style.width = circle.style.height = size + "px";
+        circle.style.left = x + "px";
+        circle.style.top = y + "px";
+        circle.classList.add("ripple");
+        const ripple = btn.getElementsByClassName("ripple")[0];
+        if (ripple) ripple.remove();
+        btn.appendChild(circle);
+      });
+      btn.addEventListener("click", () => {
+        clickAudio.currentTime = 0;
+        clickAudio.play();
+      });
+    }
+
+    function attachButtonEffects() {
+      document.querySelectorAll("button").forEach((button) => {
+        addRippleEffect(button);
+      });
+    }
+
+    function showToast(message, type = "info") {
+      toast.textContent = message;
+      toast.className = "";
+      toast.classList.add("show", type);
+      setTimeout(() => {
+        toast.classList.remove("show", type);
+      }, 3000);
+    }
+
     function renderMainMenu() {
-      // Quiz Generator-i gizlət, başlığı yenilə, əsas menyunu göstər
       quizGenerator.style.display = "none";
       headerTitle.textContent = "Quiz Mövzularını Seçin";
       container.classList.remove("has-back", "hidden");
@@ -607,7 +634,6 @@ E). 5"></textarea>
         '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
         '<button class="start-btn" data-topic="diff">Diferensial</button>';
       attachButtonEffects();
-      // Səhifənin yuxarısına qayıt
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -617,20 +643,19 @@ E). 5"></textarea>
 
       container.classList.add("hidden");
       setTimeout(() => {
-        container.classList.remove("has-back", "hidden");
+        container.classList.remove("hidden");
         container.classList.add("has-back");
-        container.innerHTML =
-          '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
-          '<p class="section-title">' +
-          (topic === "program"
+        headerTitle.textContent =
+          topic === "program"
             ? "Proqramlaşdırma suallarını seç:"
             : topic === "linear"
             ? "Xətti Cəbr suallarını seç:"
             : topic === "xdiak"
             ? "XDIAK suallarını seç:"
-            : "Diferensial suallarını seç:") +
-          "</p>";
-
+            : "Diferensial suallarını seç:";
+        container.innerHTML =
+          '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
+          '<p class="section-title"></p>';
         const btnContainer = document.createElement("div");
         btnContainer.id = "btn-container";
 
@@ -651,6 +676,7 @@ E). 5"></textarea>
     function openQuiz(link, btn) {
       btn.classList.add("btn-loading");
       if (isiOS) {
+
         const existingModal = document.getElementById("modal-overlay");
         if (existingModal) existingModal.remove();
 
@@ -717,42 +743,6 @@ E). 5"></textarea>
       }
     }
 
-    function showToast(message, type = "info") {
-      toast.textContent = message;
-      toast.className = "";
-      toast.classList.add("show", type);
-      setTimeout(() => {
-        toast.classList.remove("show", type);
-      }, 3000);
-    }
-
-    function addRippleEffect(btn) {
-      btn.addEventListener("click", function (e) {
-        const rect = btn.getBoundingClientRect();
-        const circle = document.createElement("span");
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        circle.style.width = circle.style.height = size + "px";
-        circle.style.left = x + "px";
-        circle.style.top = y + "px";
-        circle.classList.add("ripple");
-        const ripple = btn.getElementsByClassName("ripple")[0];
-        if (ripple) ripple.remove();
-        btn.appendChild(circle);
-      });
-      btn.addEventListener("click", () => {
-        clickAudio.currentTime = 0;
-        clickAudio.play();
-      });
-    }
-
-    function attachButtonEffects() {
-      document.querySelectorAll("button").forEach((button) => {
-        addRippleEffect(button);
-      });
-    }
-
     async function checkIP() {
       try {
         const res = await fetch("https://api.ipify.org?format=json");
@@ -797,83 +787,6 @@ E). 5"></textarea>
       });
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      initializeTheme();
-      initializeLoader();
-      renderMainMenu();
-
-      // Əvvəlki mövzu varsa, avtomatik aç
-      const lastTopic = localStorage.getItem("lastTopic");
-      if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
-    });
-
-    window.addEventListener("load", checkIP);
-
-    container.addEventListener("click", (e) => {
-      const btn = e.target.closest("button");
-      if (!btn) return;
-      // Əsas menyudan mövzu seçilərkən:
-      if (btn.classList.contains("start-btn") && btn.id !== "quizLauncher") {
-        const topic = btn.getAttribute("data-topic");
-        startQuiz(topic);
-      }
-      // Mövzu içindəki geri düyməsi:
-      else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
-        renderMainMenu();
-      }
-      // Quiz butonları:
-      else if (btn.classList.contains("quiz-btn")) {
-        const link = btn.getAttribute("data-link");
-        openQuiz(link, btn);
-      }
-    });
-
-    // -------- Yeni "Quiz" Düyməsinin Davranışı --------
-    quizLauncher.addEventListener("click", () => {
-      // Əsas menyunu gizlət, başlığı yenilə, Quiz bölməsini göstə
-      container.classList.add("hidden");
-      headerTitle.textContent = "Quiz yarad";
-
-      quizGenerator.style.display = "block";
-      quizGenerator.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-
-    // -------- Quiz Generator Kodu --------
-
-    // Fisher–Yates qarışdırma funksiyası
-    function shuffleArray(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-    }
-
-    // Unicode √ və combining overbar ̅ aşkar edib LaTeX-ə çevirən funksiya
-    function normalizeText(text) {
-      text = text.replace(/\(\s*a\s*\)\s*̅/g, '\\overrightarrow{a}');
-      text = text.replace(/\(\s*b\s*\)\s*̅/g, '\\overrightarrow{b}');
-      text = text.replace(/√\s*3/g, '\\sqrt{3}');
-      return text;
-    }
-
-    // "x^2/36" kimi fraqmentləri "\frac{x^{2}}{36}" formasına çevirən funksiya
-    function convertToLatexFraction(text) {
-      return text.replace(/([a-zA-Z])\^(\d+)\/(\d+)/g, function(match, v, exp, denom) {
-        return `\\frac{${v}^{${exp}}}{${denom}}`;
-      });
-    }
-
-    // Mətn içində LaTeX əmrləri varsa wrap edən funksiya
-    function wrapMathIfNeeded(text) {
-      let normalized = normalizeText(text);
-      const fracConverted = convertToLatexFraction(normalized);
-      if (fracConverted !== text || /\\overrightarrow|\\sqrt/.test(normalized)) {
-        return `\\(${fracConverted}\\)`;
-      }
-      return text;
-    }
-
-    // Sual + variant bloklarını parse edən funksiya
     function parseQuestionsFromText(rawText) {
       const lines = rawText
         .split(/\r?\n/)
@@ -902,29 +815,57 @@ E). 5"></textarea>
       return questions;
     }
 
-    // Quiz-i yaradan funksiya
+    function normalizeText(text) {
+      text = text.replace(/\(\s*a\s*\)\s*̅/g, '\\overrightarrow{a}');
+      text = text.replace(/\(\s*b\s*\)\s*̅/g, '\\overrightarrow{b}');
+      text = text.replace(/√\s*3/g, '\\sqrt{3}');
+      return text;
+    }
+
+    function convertToLatexFraction(text) {
+      return text.replace(/([a-zA-Z])\^(\d+)\/(\d+)/g, function(match, v, exp, denom) {
+        return `\\frac{${v}^{${exp}}}{${denom}}`;
+      });
+    }
+
+    function wrapMathIfNeeded(text) {
+      let normalized = normalizeText(text);
+      const fracConverted = convertToLatexFraction(normalized);
+      if (fracConverted !== text || /\\overrightarrow|\\sqrt/.test(normalized)) {
+        return `\\(${fracConverted}\\)`;
+      }
+      return text;
+    }
+
     function buildQuiz(questionsData) {
       const quizDiv = document.getElementById("quiz");
       quizDiv.innerHTML = "";
 
       const questions = JSON.parse(JSON.stringify(questionsData));
-      shuffleArray(questions);
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+      }
 
       questions.forEach((qObj, qIndex) => {
         const opts = qObj.options.map((optText, idx) => ({
           text: wrapMathIfNeeded(optText),
           isCorrect: idx === 0
         }));
-        shuffleArray(opts);
 
-        const container = document.createElement("div");
-        container.classList.add("question-container");
+        for (let i = opts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [opts[i], opts[j]] = [opts[j], opts[i]];
+        }
+
+        const containerDiv = document.createElement("div");
+        containerDiv.classList.add("question-container");
 
         const questionEl = document.createElement("div");
         questionEl.classList.add("question-text");
         const wrappedQuestion = wrapMathIfNeeded(qObj.question);
         questionEl.innerHTML = `<strong>${qIndex + 1}.</strong> ${wrappedQuestion}`;
-        container.appendChild(questionEl);
+        containerDiv.appendChild(questionEl);
 
         const ul = document.createElement("ul");
         ul.classList.add("options-list");
@@ -945,8 +886,8 @@ E). 5"></textarea>
           li.appendChild(label);
           ul.appendChild(li);
         });
-        container.appendChild(ul);
-        quizDiv.appendChild(container);
+        containerDiv.appendChild(ul);
+        quizDiv.appendChild(containerDiv);
       });
 
       if (window.MathJax) {
@@ -954,7 +895,6 @@ E). 5"></textarea>
       }
     }
 
-    // Cavabları yoxlayan funksiya
     function showResults(numQuestions) {
       const quizDiv = document.getElementById("quiz");
       const containers = quizDiv.getElementsByClassName("question-container");
@@ -983,7 +923,51 @@ E). 5"></textarea>
       document.getElementById("submitQuiz").style.display = "none";
     }
 
-    // “Quiz Hazırla” düyməsi klik edildikdə
+    document.addEventListener("DOMContentLoaded", () => {
+      initializeTheme();
+      initializeLoader();
+      renderMainMenu();
+
+      const lastTopic = localStorage.getItem("lastTopic");
+      if (lastTopic) {
+        setTimeout(() => startQuiz(lastTopic), 800);
+      }
+
+      quizLauncher.addEventListener("click", () => {
+        container.classList.add("hidden");
+        headerTitle.textContent = "Quiz Yarat";
+        quizGenerator.style.display = "block";
+        quizGenerator.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      quizBackBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        renderMainMenu();
+      });
+    });
+
+    window.addEventListener("load", checkIP);
+
+    container.addEventListener("click", (e) => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+
+
+      if (btn.classList.contains("start-btn") && btn.id !== "quizLauncher") {
+        const topic = btn.getAttribute("data-topic");
+        startQuiz(topic);
+      }
+
+      else if (btn.classList.contains("back-btn") && btn.id !== "quizBackBtn") {
+        renderMainMenu();
+      }
+
+      else if (btn.classList.contains("quiz-btn")) {
+        const link = btn.getAttribute("data-link");
+        openQuiz(link, btn);
+      }
+    });
+
     document.getElementById("parseQuiz").addEventListener("click", () => {
       const raw = document.getElementById("rawInput").value;
       if (!raw.trim()) {
@@ -1010,6 +994,8 @@ E). 5"></textarea>
       document.getElementById("parseQuiz").disabled = true;
       document.getElementById("result").textContent = "";
     });
+
+    attachButtonEffects();
   </script>
 </body>
 </html>
