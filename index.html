@@ -528,8 +528,8 @@
 
   <!-- Quiz Generator-in Gizli Konteyneri -->
   <div id="quizGenerator">
-    <!-- İndi bu düymə Quiz bölməsinin içində işləyəcək -->
-    <button id="quizBackBtn" class="back-btn">‹ Geri</button>
+    <!-- Burada onclick təqdim edirik -->
+    <button id="quizBackBtn" class="back-btn" onclick="renderMainMenu()">‹ Geri</button>
     <h1>Quiz yarad</h1>
 
     <!-- Sualları bu textarea'ya yapışdırın -->
@@ -592,7 +592,6 @@ E). 5"></textarea>
     const headerTitle = document.getElementById("headerTitle");
     const quizLauncher = document.getElementById("quizLauncher");
     const quizGenerator = document.getElementById("quizGenerator");
-    // Qeyd: `quizBackBtn` hələ DOM yüklənməmişdən əldə edilə bilməz, ona görə observer edəcəyik.
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -806,12 +805,6 @@ E). 5"></textarea>
       // Əvvəlki mövzu varsa, avtomatik aç
       const lastTopic = localStorage.getItem("lastTopic");
       if (lastTopic) setTimeout(() => startQuiz(lastTopic), 800);
-
-      // Quiz Generator’dakı "‹ Geri" düyməsi üçün listener
-      const quizBackBtn = document.getElementById("quizBackBtn");
-      quizBackBtn.addEventListener("click", () => {
-        renderMainMenu();
-      });
     });
 
     window.addEventListener("load", checkIP);
