@@ -572,6 +572,11 @@ E). 5"></textarea>
         { label: "201-300", link: "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2" },
         { label: "301-425", link: "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7" }
       ],
+      it: [
+        { label: "1-100", link: "https://quizizz.com/embed/quiz/684af076fbf34e911f642009" },
+        { label: "101-200", link: "https://quizizz.com/embed/quiz/684af083fbf34e911f64200f" },
+        { label: "201-332", link: "https://quizizz.com/embed/quiz/684af08c566b8aec5ee511a1" }
+      ],
       diff: [
         { label: "1-100", link: "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1" },
         { label: "101-205", link: "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf" },
@@ -641,6 +646,7 @@ E). 5"></textarea>
         '<button class="start-btn" data-topic="program">Proqramlaşdırma</button>' +
         '<button class="start-btn" data-topic="linear">Xətti Cəbr</button>' +
         '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
+        '<button class="start-btn" data-topic="it">İT Əsasları 2</button>' +
         '<button class="start-btn" data-topic="diff">Diferensial</button>';
       attachButtonEffects();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -661,6 +667,8 @@ E). 5"></textarea>
             ? "Xətti Cəbr suallarını seç:"
             : topic === "xdiak"
             ? "XDIAK suallarını seç:"
+            : topic === "it"
+            ? "İT Əsasları 2 suallarını seç:"
             : "Diferensial suallarını seç:";
         container.innerHTML =
           '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
