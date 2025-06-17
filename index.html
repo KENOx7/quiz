@@ -498,6 +498,83 @@
     #quizGenerator .options-list input[type="radio"][disabled] + span {
       opacity: 0.6;
     }
+
+    /* Yeni əlavə olunan CSS stilləri */
+    .global-material-container {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* Düymələr arasında məsafə */
+      margin-bottom: 25px; /* Quiz düymələrindən əvvəl yer */
+      flex-wrap: wrap;
+    }
+
+    .global-material-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      flex-grow: 1;
+      max-width: 220px; /* Daha geniş düymələr */
+    }
+
+    .global-material-btn.download-global {
+      background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+    }
+
+    .global-material-btn.download-global:hover {
+      background: linear-gradient(135deg, #388E3C 0%, #2E7D32 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(76, 175, 80, 0.5);
+    }
+
+    .global-material-btn.view-global {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    }
+
+    .global-material-btn.view-global:hover {
+      background: linear-gradient(135deg, #1976D2 0%, #1565C0 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(33, 150, 243, 0.5);
+    }
+
+    /* Dark mode uyğunlaşdırması */
+    body.dark .global-material-btn.download-global {
+      background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+      box-shadow: 0 4px 12px rgba(102, 187, 106, 0.4);
+    }
+    body.dark .global-material-btn.download-global:hover {
+      background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+      box-shadow: 0 6px 16px rgba(102, 187, 106, 0.5);
+    }
+    body.dark .global-material-btn.view-global {
+      background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
+      box-shadow: 0 4px 12px rgba(66, 165, 245, 0.4);
+    }
+    body.dark .global-material-btn.view-global:hover {
+      background: linear-gradient(135deg, #2196f3 0%, #1e88e5 100%);
+      box-shadow: 0 6px 16px rgba(66, 165, 245, 0.5);
+    }
+
+    @media (max-width: 600px) {
+      .global-material-btn {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+        max-width: unset;
+      }
+      .global-material-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -550,48 +627,161 @@ E). 5"></textarea>
 
   <script>
     const quizData = {
-      program: [
-        { label: "1-110", link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f" },
-        { label: "111-220", link: "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d" },
-        { label: "221-350", link: "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f" }
-      ],
-      instr: [
-        { label: "1-100", link: "https://quizizz.com/embed/quiz/68323bee528854915f39ce61" },
-        { label: "101-200", link: "https://quizizz.com/embed/quiz/68324150bdea981b68c82578" },
-        { label: "201-309", link: "https://quizizz.com/embed/quiz/68324a16bca68164fcaa094e" }
-      ],
-      linear: [
-        { label: "1-50", link: "https://quizizz.com/embed/quiz/68436dfbbb6200bbf1b9d730" },
-        { label: "51-111", link: "https://quizizz.com/embed/quiz/6844238c3653ea6064cc935b" },
-        { label: "1-111", link: "https://quizizz.com/embed/quiz/683f58989ba449e01c456667" },
-        { label: "112-150", link: "https://quizizz.com/embed/quiz/6844657801f701900dabc09a" },
-        { label: "151-218", link: "https://quizizz.com/embed/quiz/684488c8599ec43c715bc181" },
-        { label: "112-218", link: "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1" },
-        { label: "219-267", link: "https://quizizz.com/embed/quiz/6848630579fd973c0a27b5f0" },
-        { label: "268-320", link: "https://quizizz.com/embed/quiz/684863bca1f5b804bb0b83d0" },
-        { label: "219-320", link: "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082" }
-      ],
-      xdiak: [
-        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481" },
-        { label: "101-200", link: "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5" },
-        { label: "201-300", link: "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2" },
-        { label: "301-425", link: "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7" }
-      ],
-      it: [
-        { label: "1-100", link: "https://quizizz.com/embed/quiz/684af076fbf34e911f642009" },
-        { label: "101-200", link: "https://quizizz.com/embed/quiz/684af083fbf34e911f64200f" },
-        { label: "201-332", link: "https://quizizz.com/embed/quiz/684af08c566b8aec5ee511a1" }
-      ],
-      fizika: [
-        { label: "1-100", link: "https://quizizz.com/embed/quiz/684f1c389df86644719ff8ad" },
-        { label: "101-200", link: "https://quizizz.com/embed/quiz/684fd53236786d3a42614013" },
-        { label: "201-300", link: "https://quizizz.com/embed/quiz/6850a3d057d4a09328898d0b" }
-      ],
-      diff: [
-        { label: "1-100", link: "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1" },
-        { label: "101-205", link: "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf" },
-        { label: "206-301", link: "https://quizizz.com/embed/quiz/683f60d33740abec43503e14" }
-      ]
+      program: {
+        globalDownloadLink: "https://docs.google.com/uc?export=download&id=1iuUkwGv0HEBxsMvn4CoepAI8K5zhM5V6", 
+        globalViewLink: "https://docs.google.com/document/d/1iuUkwGv0HEBxsMvn4CoepAI8K5zhM5V6/preview", 
+        quizzes: [
+          {
+            label: "1-110",
+            link: "https://quizizz.com/embed/quiz/683dddfd79bab9c70d96170f",
+          },
+          {
+            label: "111-220",
+            link: "https://quizizz.com/embed/quiz/683dde151f8214ac74f7703d",
+          },
+          {
+            label: "221-350",
+            link: "https://quizizz.com/embed/quiz/683dde314708a5aad48cb67f",
+          },
+        ],
+      },
+      instr: {
+        globalDownloadLink: "https://docs.google.com/uc?export=download&id=1z3eAbk7qeem9vD6XpySKr-ds8MJ8KwSR", 
+        globalViewLink: "https://docs.google.com/document/d/1z3eAbk7qeem9vD6XpySKr-ds8MJ8KwSR/preview", 
+        quizzes: [
+          {
+            label: "1-100",
+            link: "https://quizizz.com/embed/quiz/68323bee528854915f39ce61",
+          },
+          {
+            label: "101-200",
+            link: "https://quizizz.com/embed/quiz/68324150bdea981b68c82578",
+          },
+          {
+            label: "201-309",
+            link: "https://quizizz.com/embed/quiz/68324a16bca68164fcaa094e",
+          },
+        ],
+      },
+      linear: {
+        globalDownloadLink: "https://drive.google.com/uc?export=download&id=1KlyJYW3mh_kCzxlxGW1HdmWP_iB9FK1n", 
+        globalViewLink: "https://drive.google.com/file/d/1KlyJYW3mh_kCzxlxGW1HdmWP_iB9FK1n/preview",
+
+        quizzes: [
+          {
+            label: "1-50",
+            link: "https://quizizz.com/embed/quiz/68436dfbbb6200bbf1b9d730",
+          },
+          {
+            label: "51-111",
+            link: "https://quizizz.com/embed/quiz/6844238c3653ea6064cc935b",
+          },
+          {
+            label: "1-111",
+            link: "https://quizizz.com/embed/quiz/683f58989ba449e01c456667",
+          },
+          {
+            label: "112-150",
+            link: "https://quizizz.com/embed/quiz/6844657801f701900dabc09a",
+          },
+          {
+            label: "151-218",
+            link: "https://quizizz.com/embed/quiz/684488c8599ec43c715bc181",
+          },
+          {
+            label: "112-218",
+            link: "https://quizizz.com/embed/quiz/683f58af9413297320bc29f1",
+          },
+          {
+            label: "219-267",
+            link: "https://quizizz.com/embed/quiz/6848630579fd973c0a27b5f0",
+          },
+          {
+            label: "268-320",
+            link: "https://quizizz.com/embed/quiz/684863bca1f5b804bb0b83d0",
+          },
+          {
+            label: "219-320",
+            link: "https://quizizz.com/embed/quiz/683f58c21258dca9091f1082",
+          },
+        ],
+      },
+      xdiak: {
+        globalDownloadLink: "https://drive.google.com/uc?export=download&id=DRIVE_ID_XDIAK_GLOBAL_DOWNLOAD", // XDIAK üçün ümumi materialı yükləmə linki
+        globalViewLink: "https://drive.google.com/file/d/DRIVE_ID_XDIAK_GLOBAL_VIEW/view", // XDIAK üçün ümumi materiala baxış linki
+        quizzes: [
+          {
+            label: "1-100",
+            link: "https://quizizz.com/embed/quiz/683f5cf4c777386684e14481",
+          },
+          {
+            label: "101-200",
+            link: "https://quizizz.com/embed/quiz/683f5d1279bab9c70d96c2b5",
+          },
+          {
+            label: "201-300",
+            link: "https://quizizz.com/embed/quiz/683f5d2eeee6434cec6396e2",
+          },
+          {
+            label: "301-425",
+            link: "https://quizizz.com/embed/quiz/683f5d50eee6434cec6396e7",
+          },
+        ],
+      },
+      it: {
+        globalDownloadLink: "https://docs.google.com/uc?export=download&id=1mgn0PjrLejO1bEL0Si0eSXxtyOm9OIj2", 
+        globalViewLink: "https://docs.google.com/document/d/1mgn0PjrLejO1bEL0Si0eSXxtyOm9OIj2/preview", 
+        quizzes: [
+          {
+            label: "1-100",
+            link: "https://quizizz.com/embed/quiz/684af076fbf34e911f642009",
+          },
+          {
+            label: "101-200",
+            link: "https://quizizz.com/embed/quiz/684af083fbf34e911f64200f",
+          },
+          {
+            label: "201-332",
+            link: "https://quizizz.com/embed/quiz/684af08c566b8aec5ee511a1",
+          },
+        ],
+      },
+      fizika: {
+        globalDownloadLink: "https://docs.google.com/uc?export=download&id=1WTo1DVAiKqJvyJrK1918gdIAbfU7UNSg", 
+        globalViewLink: "https://docs.google.com/document/d/1WTo1DVAiKqJvyJrK1918gdIAbfU7UNSg/preview", 
+        quizzes: [
+          {
+            label: "1-100",
+            link: "https://quizizz.com/embed/quiz/684f1c389df86644719ff8ad",
+          },
+          {
+            label: "101-200",
+            link: "https://quizizz.com/embed/quiz/684fd53236786d3a42614013",
+          },
+          {
+            label: "201-300",
+            link: "https://quizizz.com/embed/quiz/6850a3d057d4a09328898d0b",
+          },
+        ],
+      },
+      diff: {
+        globalDownloadLink: "https://drive.google.com/uc?export=download&id=DRIVE_ID_DIFF_GLOBAL_DOWNLOAD", // Diferensial üçün ümumi materialı yükləmə linki
+        globalViewLink: "https://drive.google.com/file/d/DRIVE_ID_DIFF_GLOBAL_VIEW/view", // Diferensial üçün ümumi materiala baxış linki
+        quizzes: [
+          {
+            label: "1-100",
+            link: "https://quizizz.com/embed/quiz/683f60a44708a5aad48d66d1",
+          },
+          {
+            label: "101-205",
+            link: "https://quizizz.com/embed/quiz/683f60b29413297320bc2baf",
+          },
+          {
+            label: "206-301",
+            link: "https://quizizz.com/embed/quiz/683f60d33740abec43503e14",
+          },
+        ],
+      },
     };
 
     const allowedIPPrefixes = [
@@ -654,7 +844,7 @@ E). 5"></textarea>
       container.innerHTML =
         '<p class="section-title">Başlanğıc mövzu:</p>' +
         '<button class="start-btn" data-topic="program">Proqramlaşdırma</button>' +
-        '<button class="start-btn" data-topic="instr">İnstrumental və tətbiqi proqramlar</button>' +
+        '<button class="start-btn" data-topic="instr">İnstrumental və tətbiqi proqramlar</button>' +
         '<button class="start-btn" data-topic="linear">Xətti Cəbr</button>' +
         '<button class="start-btn" data-topic="xdiak">XDIAK</button>' +
         '<button class="start-btn" data-topic="it">İT Əsasları 2</button>' +
@@ -676,7 +866,7 @@ E). 5"></textarea>
           topic === "program"
             ? "Proqramlaşdırma suallarını seç:"
             : topic === "instr"
-            ? "İnstrumental və tətbiqi proqramlar suallarını seç:"
+            ? "İnstrumental və tətbiqi proqramlar suallarını seç:"
             : topic === "linear"
             ? "Xətti Cəbr suallarını seç:"
             : topic === "xdiak"
@@ -686,23 +876,58 @@ E). 5"></textarea>
             : topic === "fizika"
             ? "Fizika suallarını seç:"
             : "Diferensial suallarını seç:";
+        
+        // Ümumi material düymələri üçün container
+        const globalMaterialContainer = document.createElement("div");
+        globalMaterialContainer.className = "global-material-container";
+
+        const topicData = quizData[topic];
+
+        if (topicData.globalDownloadLink) {
+          const downloadBtn = document.createElement("button");
+          downloadBtn.className = "global-material-btn download-global";
+          downloadBtn.textContent = "Dərs Materiallarını Yüklə";
+          downloadBtn.onclick = () => {
+            window.open(topicData.globalDownloadLink, "_blank");
+          };
+          globalMaterialContainer.appendChild(downloadBtn);
+          addRippleEffect(downloadBtn); // Ripple effekti əlavə et
+        }
+
+        if (topicData.globalViewLink) {
+          const viewBtn = document.createElement("button");
+          viewBtn.className = "global-material-btn view-global";
+          viewBtn.textContent = "Dərs Materiallarına Online Bax";
+          viewBtn.onclick = () => {
+            window.open(topicData.globalViewLink, "_blank");
+          };
+          globalMaterialContainer.appendChild(viewBtn);
+          addRippleEffect(viewBtn); // Ripple effekti əlavə et
+        }
+
         container.innerHTML =
           '<button class="back-btn" aria-label="‹ Geri">‹ Geri</button>' +
           '<p class="section-title"></p>';
+        
+        // Əgər ümumi material düymələri varsa, onları əlavə et
+        if (globalMaterialContainer.children.length > 0) {
+          container.appendChild(globalMaterialContainer);
+        }
+
         const btnContainer = document.createElement("div");
         btnContainer.id = "btn-container";
 
-        quizData[topic].forEach((item) => {
-          const btn = document.createElement("button");
-          btn.className = "quiz-btn";
-          btn.textContent = item.label;
-          btn.setAttribute("data-link", item.link);
-          btnContainer.appendChild(btn);
+        topicData.quizzes.forEach((item) => { // Buradan 'topicData.quizzes' istifadə olunur
+          const quizBtn = document.createElement("button");
+          quizBtn.className = "quiz-btn";
+          quizBtn.textContent = item.label;
+          quizBtn.setAttribute("data-link", item.link);
+          btnContainer.appendChild(quizBtn);
         });
         container.appendChild(btnContainer);
 
         setTimeout(() => container.classList.remove("hidden"), 50);
-        attachButtonEffects();
+        attachButtonEffects(); // Ensure ripple effects are re-attached for new quiz-btns
       }, 300);
     }
 
