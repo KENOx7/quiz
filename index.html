@@ -446,6 +446,8 @@
       border: 1px solid #ccc;
       background: #fff;
       white-space: pre-wrap;
+      color: var(--text-color);
+      background-color: var(--card-bg);
     }
     #quizGenerator .btn {
       display: inline-block;
@@ -464,15 +466,16 @@
       background: #0056b3;
     }
     #quizGenerator .question-container {
-      background: #fff;
+      background: var(--card-bg);
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 5px var(--card-shadow);
       padding: 20px;
       margin-bottom: 20px;
     }
     #quizGenerator .question-text {
       font-size: 18px;
       margin-bottom: 10px;
+      color: var(--text-color);
     }
     #quizGenerator .options-list {
       list-style: none;
@@ -480,6 +483,16 @@
     }
     #quizGenerator .options-list li {
       margin-bottom: 8px;
+      color: var(--text-color);
+    }
+    #quizGenerator .options-list label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    #quizGenerator .options-list input[type="radio"] {
+      flex-shrink: 0;
     }
     #quizGenerator .correct-answer {
       color: green;
@@ -494,10 +507,45 @@
       font-size: 20px;
       font-weight: bold;
       text-align: center;
+      color: var(--text-color);
     }
     #quizGenerator .options-list input[type="radio"][disabled] + span {
       opacity: 0.6;
     }
+
+    /* New CSS styles for template buttons */
+    .template-buttons-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .template-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #6c757d; /* A neutral color */
+        color: #fff;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 0.3s ease;
+    }
+
+    .template-btn:hover {
+        background-color: #5a6268;
+    }
+
+    /* Dark mode for template buttons */
+    body.dark .template-btn {
+        background-color: #495057;
+    }
+
+    body.dark .template-btn:hover {
+        background-color: #343a40;
+    }
+
 
     /* Yeni əlavə olunan CSS stilləri */
     .global-material-container {
@@ -574,10 +622,15 @@
         gap: 10px;
         margin-bottom: 20px;
       }
+      .template-buttons-container {
+        flex-direction: column;
+      }
+      .template-btn {
+        width: 100%;
+      }
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-</head>
+  </head>
 <body>
   <a href="#container" class="skip-link">Quiz-ə keç</a>
 
@@ -607,6 +660,19 @@
   <div id="quizGenerator">
     <button id="quizBackBtn" class="back-btn">‹ Geri</button>
     <h1>Quiz Yarat</h1>
+
+    <div class="template-buttons-container">
+      <button class="template-btn" data-template="a">Fizika 1-50</button>
+      <button class="template-btn" data-template="b">Fizika 51-60</button>
+      <button class="template-btn" data-template="c">Fizika 61-70</button>
+      <button class="template-btn" data-template="d">Fizika 51-70</button>
+      <button class="template-btn" data-template="e">Fizika 71-80</button>
+      <button class="template-btn" data-template="f">Fizika 51-80</button>
+      <button class="template-btn" data-template="g">Fizika 81-90</button>
+      <button class="template-btn" data-template="h">Fizika 51-90</button>
+      <button class="template-btn" data-template="l">Fizika 91-100</button>
+      <button class="template-btn" data-template="m">Fizika 51-100</button>
+    </div>
 
     <textarea
       id="rawInput"
@@ -789,6 +855,1693 @@ E). 5"></textarea>
       },
     };
 
+    const quizTemplates = {
+        a: `1. Mexanika neyi öyrənir?
+a). mexaniki hadisələri
+b). optik hadisələri
+c). elektrik hadisələri
+d). istilik hadisələrini
+e). səs hadisələrin
+
+2. Mexanikanın hansı bölmələri var?Kinematika, 2. Optika, 3. Statika, 4. Elektronika, 5. Dinamika.
+a). 1,3,5
+b). 1,2,3
+c). 2,3,5
+d). 1,4,5
+e). 2,3,4
+
+3. Kinematika nəyi öyrənir?
+a). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəbləri nəzərə almadan öyrənir
+b). Cisimlərin hərəkətini, bu hərəkəti doğuran bu və ya digər səbəblərlə birlikdə öyrənir
+c). Cisimlərin tarazlıqda olma hallarını öyrənir
+d). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə öyrənir
+e). Maddi cisimlərdə baş verən hər cür dəyişiklik öyrənir
+
+4. Dinamika nəyi öyrənir?
+a). Cisimlərin hərəkətini, bu hərəkəti doğuran bu və ya digər səbəblərlə birlikdə öyrənir
+b). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəbləri nəzərə almadan öyrənir
+c). Cisimlərin tarazlıqda olma hallarını öyrənir
+d). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə öyrənir
+e). Maddi cisimlərdə baş verən hər cür dəyişiklik öyrənir
+
+5. Statika nəyi öyrənir?
+a). Cisimlərin tarazlıqda olma hallarını öyrənir
+b). Cisimlərin hərəkətini, bu hərəkəti doğuran bu və ya digər səbəblərlə birlikdə öyrənir
+c). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəbləri nəzərə almadan öyrənir
+d). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə öyrənir
+e). Maddi cisimlərdə baş verən hər cür dəyişiklik öyrənir
+
+6. Sürət nəyi xarakterizə edir?
+a). Maddi nöqtənin hərəkəti zamanı yerdəyişmənin zamandan asılı olaraq dəyişməsini
+b). Maddi nöqtənin fəzada hərəkəti zamanı keçdiyi nöqtələrin həndəsi yerini xarakterizə edir
+c). Cismin öz əvvəlki sükunət və yaxud düzxətli bərabərsürətli halını xarakterizə edir
+d). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəbləri xarakterizə edir
+e). Bir cismin başqa cismlərə nəzərən yerdəyişməsini xarakterizə edir
+
+7. Ətalət qanunu nəyə deyilir?
+a). Cismin öz əvvəlki sükunət və yaxud düzxətli bərabərsürətli halını saxlamasına deyilir
+b). Maddi nöqtənin hərəkəti zamanı yerdəyişmənin zamandan asılı olaraq dəyişməsinə deyilir
+c). Maddi nöqtənin fəzada hərəkəti zamanı keçdiyi nöqtələrin həndəsi yerinə deyilir
+d). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəblərə deyilir
+e). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə deyilir
+
+8. BS-də qüvvənin vahidi:
+a). Nyuton
+b). kq
+c). Coul
+d). Kelvin
+e). Amper
+
+9. Təcilin vahidi hansıdır?
+a). m/san²
+b). m/san
+c). N/m
+d). dina
+e). kq/m
+
+10. İmpuls nəyə deyilir?
+a). Cismin kütləsi ilə sürətinin hasili bu cismin hərəkət miqdarı və ya impulsu deyilir
+b). Maddi nöqtənin hərəkəti zamanı yerdəyişmənin zamandan asılı olaraq dəyişməsinə deyilir
+c). Maddi nöqtənin fəzada hərəkəti zamanı keçdiyi nöqtələrin həndəsi yerinə deyilir
+d). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəblərə deyilir
+e). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə deyilir
+11. Mexaniki iş nəyə deyilir?
+a). Mexaniki iş – qüvvə ilə yerdəyişmənin skalyar hasilinə bərabər olan fiziki kəmiyyətdir
+b). Mexaniki iş – kütlə ilə yerdəyişmənin skalyar hasilinə bərabər olan fiziki kəmiyyətdir
+c). Mexaniki iş – kütlə ilə təcilin skalyar hasilinə bərabər olan fiziki kəmiyyətdir
+d). Mexaniki iş – qüvvə ilə təcilin skalyar hasilinə bərabər olan fiziki kəmiyyətdir
+e). Mexaniki iş – sürət ilə yerdəyişmənin skalyar hasilinə bərabər olan fiziki kəmiyyətdir
+
+12. BS-də mexaniki işin vahidi hansıdır?
+a). Coul
+b). Nyuton
+c). Kelvin
+d). Amper
+e). Vatt
+
+13. Güc nəyə deyilir?
+a). Vahid zamanda görülən işə bərabər olan kəmiyyətə deyilir
+b). Maddi nöqtənin hərəkəti zamanı yerdəyişmənin zamandan asılı olaraq dəyişməsinə deyilir
+c). Maddi nöqtənin fəzada hərəkəti zamanı keçdiyi nöqtələrin həndəsi yerinə deyilir
+d). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəblərə deyilir
+e). Bir cismin başqa cismlərə nəzərən yerdəyişməsinə deyilir
+
+14. BS-də gücün vahidi hansıdır?
+a). Vatt
+b). Coul
+c). Nyuton
+d). Dina
+e). Kelvin
+
+15. Kinetik enerji nəyə deyilir?
+a). Cisim və ya cisimlər sisteminin öz hərəkəti nəticəsində malik olduğu enerjiyə deyilir
+b). Cismin ayrı-ayrı hissələri arasındakı qarşılıqlı təsiri ilə malik olduğu enerjiyə deyilir
+c). Cismin və ya cisimlər sisteminin işgörmə qabiliyyətinə deyilir
+d). Vahid zamanda görülən işə bərabər olan kəmiyyətə deyilir
+e). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəblərə deyilir
+
+16. Potensial enerji nəyə deyilir?
+a). Cismin ayrı-ayrı hissələri arasındakı qarşılıqlı təsiri nəticəsində malik olduğu enerjiyə deyilir
+b). Cisim və ya cisimlər sisteminin öz hərəkəti nəticəsində malik olduğu enerjiyə deyilir
+c). Cismin və ya cisimlər sisteminin işgörmə qabiliyyətinə deyilir
+d). Vahid zamanda görülən işə bərabər olan kəmiyyətə deyilir
+e). Cismin və ya cisimlər sisteminin hərəkətini, bu hərəkəti doğuran səbəblərə deyilir
+
+17. Potensial qüvvələrin qapalı yolda gördüyü iş nəyə bərabərdir?
+a). 0
+b). 10 C
+c). 1 C
+d). 1 Vt
+e). 10 Vt
+
+18. Mexaniki enerji haqqında deyilən fikirlərdən hansı doğrudur?
+a). Mexaniki enerji nə itmir, nə də yaranmır, yalnız bir şəkildən başqa şəkilə keçir
+b). Mexaniki enerji itir və elastiki toqquşma zamanı yenidən yaranır
+c). Mexaniki enerji itir və yaranır və şəklini dəyişmir
+d). Mexaniki enerji ağırlıq sahəsində dəyişmir
+e). Mexaniki enerji ağırlıq qüvvəsinin təsiri ilə yaranır və itir
+
+19. Sistemin tam enerjisi nəyə deyilir?
+a). Sistemin potensial və kinetik enerjilərinin cəmi bu sistemin tam enerjisi adlanır
+b). Sistemin mexaniki və kinetik enerjisinin fərqi bu sistemin tam enerjisi adlanır
+c). Sistemin potensial enerjisi bu sistemin tam enerjisi adlanır
+d). Sistemin kinetik enerjisi bu sistemin tam enerjisi adlanır
+e). Sistemin mexaniki enerjisi bu sistemin tam enerjisi adlanır
+
+20. Kütlə mərkəzi nəyə deyilir?
+a). Cismə irəliləmə hərəkəti verən qüvvələrinin təsir xəttlərinin kəsişmə nöqtəsi kütlə mərkəzi adlanır
+b). Bərk cisimin irəliləmə hərəkətinə kütləsi cismin kütləsinə bərabər nöqtə kütlə mərkəzi adlanır
+c). İrəliləmə hərəkəti zamanı cismi təşkil edən bütün hissəciklərin kəsişdiyi nöqtə kütlə mərkəzi adlanır
+d). Fırlanma hərəkətini xarakterizə edən xətt kütlə mərkəzi adlanır
+e). Fırlanma hərəkətini xarakterizə edən əsas kəmiyyətlərin kəsişmə nöqtəsi
+
+21. Fırlanma hərəkətini xarakterizə edən əsas kəmiyyətlər hansılardır?
+a). Qüvvə momenti, ətalət momenti, impuls momenti, qüvvə momenti impulsdur
+b). Təzyiq, qüvvə momenti, impuls
+c). Qüvvə momenti, sürət vektoru, kütlə, sıxlıq
+d). Qüvvə momenti impulsdur, bucaq təcili, kütlə
+e). Kinetik enerji, potensial enerji, impuls momenti
+
+22. Qüvvə momenti nəyə deyilir?
+a). Bərk cismin tərpənməz ox ətrafında fırlatmaq üçün cismə təsir edən qüvvə ilə qüvvə qolunun hasilinə qüvvə momenti deyilir
+b). Bərk cismin tərpənməz ox ətrafında fırlatmaq üçün cismə təsir edən əvəzləyici qüvvəyə qüvvə momenti deyilir
+c). Bərk cisimə təsir edən gərilmə qüvvəsinə qüvvə momenti deyilir
+d). Bərk cismə təsir edən ağırlıq və itələmə qüvvələrinin cəminə qüvvə momenti deyilir
+e). Bərk cismin tərpənməz ox ətrafında fırlatmaq üçün təsir edən ağırlıq qüvvəsi ilə qüvvə qolunun hasilinə qüvvə momenti deyilir
+
+
+23. Qüvvə momenti hansı düsturla təyin edilir?
+a). M = |f × r|
+b). I = mr²
+c). J = (1/2)mr²
+d). ΔZᵢ = |rᵢ(Δmᵢvᵢ)|
+e). dZ/dt = M
+
+24. Qapalı sistem təşkil edən cisimlərin impuls momentləri cəmi necə dəyişir?
+a). Sabit qalır
+b). 0-a bərabər olur
+c). Artır
+d). Azalır
+e). Kvadratik artır
+
+25. Rəqsi hərəkət nəyə deyilir?
+a). Təbiətdə və texnikada zamandan asılı olaraq bu və ya digər dərəcədə təkrarlanan hərəkətlər
+b). Təbiətdə və texnikada zamandan asılı olaraq dəyişməyən hərəkətlər
+c). Təbiətdə zamandan asılı olaraq sürətlənən hərəkətlər
+d). Təbiətdə və texnikada temperaturdan asılı olaraq dəyişən hərəkətlər
+e). Təbiətdə və texnikada təzyiqdən asılı olaraq sürətlənən hərəkətlər
+
+26. Periodik hərəkət nəyə deyilir?
+a). Rəqsi hərəkətlər zamanı cismin hərəkət halı bərabər zaman fasilələrində eynilə təkrar olunması
+b). Rəqsi hərəkətlər zamanı cismin hərəkət halı dəyişən zaman fasilələrində eynilə təkrar olunması
+c). Rəqsi hərəkətlər zamanı cismin hərəkət halı dəyişən sürətlə təkrar olunması
+d). Rəqsi hərəkətlər zamanı cismin hərəkət halı sabit sürətlə təkrar olunması
+e). Rəqsi hərəkətlər zamanı cismin hərəkət halı dəyişən təcillə təkrar olunması
+
+27. Harmonik rəqsi hərəkət nəyə deyilir?
+a). Hərəkət zamanı cismin tarazlıq vəziyyətindən olan yerdəyişməsi sinus və ya kosinus qanununa tabe olan rəqs
+b). Hərəkət zamanı cismin tarazlıq vəziyyətindən olan yerdəyişməsi tangens qanununa tabe olan rəqs
+c). Hərəkət zamanı cismin tarazlıq vəziyyətində olmayan yerdəyişməsi sinus və ya kosinus qanununa tabe olmur
+d). Hərəkət zamanı cismin tarazlıq vəziyyətindən olan yerdəyişməsi sinus və ya kosinus qanununa tabe olmur
+e). Hərəkət zamanı cismin tarazlıq vəziyyətinə qayıtması sinus və ya kosinus qanununa tabe olmur
+
+28. Rəqsin periodu nəyə deyilir?
+a). Cismin bir tam rəqs etməsi üçün lazım olan zaman
+b). Cismin tarazlıq vəziyyətinə dönməsi üçün lazım olan zaman
+c). Cismin bir neçə rəqs etməsi üçün lazım olan zaman
+d). Cismin tezliyinin 2 mislinə bərabər olan zaman
+e). Cismin tezliyinin 0-a bərabər olduğu zaman
+
+29. Rəqsin tezliyi nəyə deyilir?
+a). Bir saniyədəki rəqslərin sayına deyilir
+b). Sabit vəziyyətdəki rəqslərin sayına deyilir
+c). 2 period rəqs edən rəqslərin sayı
+d). Tarazlıq vəziyyətindəki rəqslərin sayı
+e). Dəyişən rəqslərin sayı
+
+30. Riyazi rəqqas nəyə deyilir?
+a). Uzanmayan çəkisiz sapdan asılmış maddi nöqtəyə deyilir
+b). Ağırlıq mərkəzindən kənarda yerləşən hər hansı nöqtəsindən asılmış bərk cismə deyilir
+c). Ağırlıq mərkəzində yerləşən hər hansı nöqtədən asılmış bərk cismə deyilir
+d). Uzanan çəkili sapdan asılmış maddi nöqtəyə deyilir
+e). Uzanan çəkisiz sapdan asılmış maddi nöqtəyə deyilir
+
+31. Sönən rəqslər nəyə deyilir?
+a). Zaman keçdikcə, müqavimət qüvvələrinin təsiri nəticəsində amplitudu kiçilən rəqslərə sönən rəqslər deyilir
+b). Zaman keçdikcə, müqavimət qüvvələrinin təsiri nəticəsində amplitudu artan rəqslərə sönən rəqslər deyilir
+c). Zaman keçdikcə, ağırlıq qüvvələrinin təsiri nəticəsində amplitudu kiçilən rəqslərə sönən rəqslər deyilir
+d). Zaman keçdikcə, ağırlıq qüvvələrinin təsiri nəticəsində amplitudu artan rəqslərə sönən rəqslər deyilir
+e). Zaman keçdikcə, müqavimət qüvvələrinin təsiri nəticəsində amplitudu sabit qalan rəqslərə sönən rəqslər deyilir
+
+32. Deyilən fikirlərdən hansı məxsusi rəqslərə aiddir?
+a). Rəqqası tarazlıq vəziyyətindən çıxarıb, sərbəst buraxsaq o, müəyyən müddətdən sonra dayanar
+b). Müqavimət qüvvələrinin təsiri nəticəsində amplitudu sabit qalan rəqslər müəyyən müddətdən sonra sönəcək
+c). Ağırlıq qüvvələrinin təsiri nəticəsində amplitudu sabit qalan rəqslər müəyyən müddətdən sonra sönəcək
+d). Zamandan asılı olaraq amplitudun artması hesabına rəqslərin artması baş verir
+e). Zamandan asılı olaraq amplitudun azalması hesabına rəqslərin artması baş verir
+
+33. Hansı rəqslərə məcburi rəqslər deyilir?
+a). Periodik dəyişən xarici qüvvənin təsiri ilə baş verən rəqslər məcburi rəqslər adlanır
+b). Periodik dəyişən xarici qüvvənin təsiri ilə sönən rəqslər məcburi rəqslər adlanır
+c). Sabit xarici qüvvənin təsiri ilə baş verən rəqslər məcburi rəqslər adlanır
+d). Periodik dəyişən amplitudun təsiri ilə sönən rəqslər məcburi rəqslər adlanır
+e). Periodik dəyişən daxili qüvvənin təsiri ilə baş verən rəqslər məcburi rəqslər adlanır
+
+34. Rezonans hadisəsi nəyə deyilir?
+a). Tezliyin müəyyən qiymətində məcburi rəqs amplitudunun maksimum qiymət alması
+b). Tezliyin maksimum qiymətində məcburi rəqs amplitudunun minimum qiymət alması
+c). Tezliyin müəyyən qiymətində məcburi rəqs amplitudunun 0 qiymət alması
+d). Tezliyin sabit qiymətində məcburi rəqs amplitudunun 0-a bərabər olması
+e). Tezliyin sabit qiymətində məcburi rəqs amplitudunun maksimum qiymət alması
+
+35. Rezonans tezliyi nəyə deyilir?
+a). Tezliyin məcburi rəqs amplitudunu maksimuma çevirən qiymət
+b). Tezliyin məcburi rəqs amplitudunu minimuma çevirən qiymət
+c). Tezliyin məcburi rəqs amplitudunu 0-a çevirən qiymət
+d). Tezliyin sönən rəqs amplitudunu maksimuma çevirən qiymət
+e). Tezliyin sönən rəqs amplitudunu minimuma çevirən qiymət
+
+36. Dalğa nəyə deyilir?
+a). Rəqslərin elastiki mühitdə yayılması prosesi dalğa adlanır
+b). Rəqslərin sönməsi prosesi dalğa adlanır
+c). Rəqslərin elastiki mühitdə sönməsi prosesi dalğa adlanır
+d). Tezliyin müəyyən qiymətində məcburi rəqs amplitudunun maksimum qiymət alması dalğa adlanır
+e). Tezliyin məcburi rəqs amplitudunu maksimuma çevirən qiyməti dalğa adlanır
+
+37. Uzununa dalğalar nəyə deyilir?
+a). Rəqsin yayılma istiqaməti dalğaların yayılma istiqaməti ilə eyni olan dalğalar
+b). Rəqsin yayılma istiqaməti dalğaların yayılma istiqamətinə perpendikulyar olan dalğalar
+c). Rəqsin yayılma istiqaməti dalğaların yayılma istiqamətinin əksinə olan dalğalar
+d). Sönən rəqslərin dayanması anı ilə dalğaların yayılma anı üst-üstə düşən dalğalar
+e). Sönən rəqslərin istiqaməti dalğaların yayılma istiqaməti ilə eyni olan dalğalar
+
+38. Dalğa uzunluğu nəyə deyilir?
+a). Fazaları eyni olan qonşu nöqtələr arasındakı məsafə dalğa uzunluğu adlanır
+b). Fazaları fərqli olan nöqtələr arasındakı məsafə dalğa uzunluğu adlanır
+c). Amplitudları fərqli olan nöqtələr arasındakı məsafə dalğa uzunluğu adlanır
+d). Periodları fərqli olan nöqtələr arasındakı məsafə dalğa uzunluğu adlanır
+e). Tezlikləri eyni, amplitudları fərqli olan nöqtələr arasındakı məsafə dalğa uzunluğu
+
+39. Səthdən keçən enerji seli nəyə deyilir?
+a). Dalğanın hər hansı səthdən vahid zamanda daşıdığı enerji miqdarı
+b). Dalğanın vahid səthdən dəyişən zamanda daşıdığı enerji miqdarı
+c). Dalğanın hər hansı səthdən dəyişən zamanda daşıdığı kinetik enerji miqdarı
+d). Dalğanın hər hansı səthdən dəyişən zamanda daşıdığı potensial enerji miqdarı
+e). Dalğanın hər hansı səthdən dəyişən zamanda daşıdığı kinetik və potensial enerjilərin fərqi
+
+40. Səs dalğaları hansı tezlikdə olur?
+a). 16÷20000 Hs
+b). 20000 Hs ˃
+c). 0–16 Hs
+d). 50000 Hs
+e). 25000 Hs
+
+41. Ultrasəs dalğalar hansı tezlikdə olur?
+a). 20000 Hs˃
+b). 16÷20000 Hs
+c). 0–16 Hs
+d). 50000 Hs
+e). 25000 Hs
+
+42. İnfrasəs dalğalar hansı dalğalardır?
+a). 16 Hs˂
+b). 20000 Hs˃
+c). 16÷20000 Hs
+d). 50000 Hs
+e). 25000 Hs
+
+43. Səsin əsas xarakteristikaları hansılardır?ucalığı 2. gurluğu 3. tembri 4. zəifliyi 5. tezliyi 6. enerjisi
+a). 1, 2, 3
+b). 3, 4, 6
+c). 4, 5, 6
+d). 1, 5, 6
+e). 2, 5, 6
+
+44. Elektrik yükünün saxlanma qanunu nəyə deyilir?
+a). Əks işarəli elektrik yükləri bərabər miqdarda yaranır və bərabər miqdarda yox olur.
+b). Əks işarəli elektrik yüklər müxtəlif miqdarda yaranır və müxtəlif miqdarda yox olur.
+c). Eyni işarəli elektrik yüklər bərabər miqdarda yaranır və bərabər miqdarda yox olur.
+d). Eyni işarəli elektrik yüklər müxtəlif miqdarda yaranır və müxtəlif miqdarda yox olur.
+e). Əks işarəli elektrik yüklər enerji alaraq yaranır və enerjini paylayaraq yox olur.
+
+45. Hansı yüklər nöqtəvi yüklər adlanır?
+a). Yüklərin ölçüləri aralarındakı məsafəyə nəzərən çox kiçik olsun.
+b). Yüklərin ölçüləri aralarındakı məsafəyə nəzarən çox az olsun.
+c). Yüklərin ölçüləri aralarındakı məsafəyə bərabər olsun.
+d). Yüklərin ölçüləri dəyişməz olsun.
+e). Yüklərin ölçüləri aralarındakı məsafənin ölçülərinin əksinə olsun.
+
+46. BS-də yük vahidi necə qəbul olunub?
+a). Kl.
+b). N.
+c). N/m.
+d). A.
+e). A/N.
+
+47. Hansı sahə elektrostatik sahə adlanır?
+a). Sükunətdə olan yüklərin yaratdığı sahə.
+b). Hərəkətdə olan yüklərin yaratdığı sahə.
+c). Əks işarəli yüklərin yaratdığı sahə.
+d). Elektriklənmiş yüklərin yaratdığı sahə.
+e). Enerjiyə malik yüklərin yaratdığı sahə.
+
+48. Konservativ qüvvələr nəyə deyilir?
+a). Potensiallı sahələrə təsir edən qüvvələr.
+b). Sabit sahələrə təsir edən qüvvələr.
+c). Dəyişən sahələrə təsir edən qüvvələr.
+d). Qapalı sahələrə təsir edən qüvvələr.
+e). Elektrik sahələrinə təsir edən qüvvələr.
+
+49. İzolyator nədir?
+a). Elektrik yükü yarandığı yerdə də qalır, başqa cisimlərə ötürülməyən cisim.
+b). Cisimlərdə sürtünmə nəticəsində yaranan elektrik yükü bir yerdə qalmır, bütün cisim boyunca paylanır və onunla bağlı başqa cisimlərə ötürülən cisim.
+c). Cisimlərdə elektrik sahəsi nəticəsində yaranan elektrik yükü bir yerdə qalır, başqa cisimlərə ötürülməyən cisim.
+d). Xarici qüvvələrin təsiri ilə elektrik yüklərinin yaranması və yox olması hesabına yaranan cisim.
+e). Cisimlərdə sürtünmə nəticəsində yaranan elektrik yükü bütün cisim boyunca paylanır və elektrik sahəsini sabitləşdirən cisim.
+
+50. Kondensator nədir?
+a). Kondensator elektrik yükünü yığıb saxlamaq üçün istifadə olunan bir qurğudur.
+b). Kondensator elektrik yükünü paylamaq üçün istifadə olunan bir qurğudur.
+c). Kondensator müsbət və mənfi yükləri yaratmaq üçün istifadə olunan bir qurğudur.
+d). Kondensator elektrik sahəsi yaratmaq üçün istifadə olunan bir qurğudur.
+e). Kondensator xarici qüvvələri toplamaq üçün istifadə olunan bir qurğudur.
+`,
+        b: `51. Yükdaşıyıcı nədir?
+a). Cərəyanda iştirak edən yüklü hissəciklər.
+b). Cərəyanda iştirak etməyən yüklü hissəciklər.
+c). Cərəyanda iştirak edən mənfi yüklü hissəciklər.
+d). Gərginlikdə iştirak edən müsbət yüklü hissəciklər.
+e). Gərginlikdə iştirak edən mənfi yüklü hissəciklər.
+
+52. Cərəyanın istiqaməti necə təyin olunur?
+a). Müsbət yüklərin hərəkət istiqaməti götürülür.
+b). Mənfi yüklərin hərəkət istiqaməti götürülür.
+c). Müsbət və mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+d). Müsbət yüklərin hərəkətinin əksi istiqaməti götürülür.
+e). Mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+
+53. Elektrik deşilməsi nədir?
+a). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirir, keçiriciyə çevrilir.
+b). Sahənin maksimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilir.
+c). Sahənin minimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+d). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+e). Sahənin müəyyən qiymətində qaz keçiricilik xassəsini itirir, izolyasiyaya çevrilir.
+
+54. Omik kontaktlarda nə baş verir?
+a). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulur.
+b). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+c). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+d). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu maksimum olur.
+e). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu minimum olur.
+
+55. Elektrik hərəkət qüvvəsi (e.h.q.) nəyə deyilir?
+a). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə, mənbəyin elektrik hərəkət qüvvəsi deyilir.
+b). Mənfi vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə deyilir.
+c). Müsbət vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin aldığı enerji deyilir.
+d). Mənfi vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin gördüyü işə deyilir.
+e). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin aldığı enerjiyə deyilir.
+
+56. Termoemissiya nəyə deyilir?
+a). Qızdırılmış bərk cisimlərin və mayelərin elektron buraxması hadisəsi.
+b). Soyudulmuş bərk cisimlərin və mayelərin foton buraxması hadisəsi.
+c). Qızdırılmış bərk cisimlərin və mayelərin fermion buraxması hadisəsi.
+d). Soyudulmuş bərk cisimlərin və mayelərin enerji itirməsi hadisəsi.
+e). Soyudulmuş bərk cisimlərin və mayelərin enerji alması hadisəsi.
+
+57. Termoelektron cərəyanını idarə etmək üçün nə etmək lazımdır?
+a). Lampanın daxilində əlavə elektrodlar, torlar yerləşdirilir.
+b). Lampanın daxilində əlavə enerji, közərmə yaradılmalıdır.
+c). Lampanın daxilində cərəyanı azaltmalı, torlar yerləşdirilməməlidir.
+d). Lampanın ətrafında əlavə elektrodlar, torlar yerləşdirilir.
+e). Lampanın ətrafında əlavə enerji və gərginlik yaradılmalıdır.
+
+58. Kontakt potensiallar fərqi nəyə deyilir?
+a). İki müxtəlif metalı bir-birinə toxundurduqda aralarında əmələ gələn potensiallar fərqi.
+b). İki müxtəlif dielektriki bir-birinə toxundurduqda aralarında əmələ gələn potensial fərqi.
+c). İki metalı bir-birindən uzaqlaşdırdıqda aralarında yaranan potensial fərqi.
+d). Bir metalın yaratdığı potensial fərqi.
+e). Yarımkeçirici və metal arasında yaranan potensial fərqi.
+
+59.Kontakt potensiallar fərqi hansı səbəblərdən yaranır?
+1) toxunan metalların çıxış işlərinin müxtəlif olması 
+2) bu metallarda sərbəst elektronların konsentrasiyasının müxtəlif olması 
+3) metal və yarımkeçiricilərin çıxış işləri fərqli olduğu üçün
+4)dielektriklərdə qadağan olunmuş zolağın enli olmasına ğörə
+a).1,2  
+b).2,3   
+c).3,4    
+d).1,4   
+e).1,3
+
+60. Kontakt potensiallar fərqi nədən asılıdır?
+a). Toxunan metalların cinsindən və toxunma yerinin temperaturundan.
+b). Yarımkeçiricinin alınma texnologiyasından.
+c). Metalların qadağan olunmuş zolağının enindən.
+d). Dielektriklərin cinsindən və toxunma yerinin temperaturundan.
+e). Metal və yarımkeçiricinin qarşılıqlı təsirindən.
+`,
+        c: `61. Termoelektrik effekt nədir?
+a). Toxunma yerlərinin temperaturları fərqli olduqda iki metal arasında e.h.q. yaranması hadisəsi.
+b). Toxunma yerlərinin temperaturları eyni olduqda e.h.q. yaranması hadisəsi.
+c). Eyni metallardan ibarət dövrədə temperaturlar fərqli olduqda e.h.q. yaranması hadisəsi.
+d). Metal və yarımkeçiricinin yaratdığı açıq dövrədə e.h.q.-si yaranması hadisəsi.
+e). Yarımkeçirici-metal dövrəsində temperaturlar fərqli olduqda e.h.q.-si yaranması.
+
+62. Hansı effektə Zeebeck effekti deyilir?
+a). Termoelektrik effekt.
+b). Qalvanomaqnit effekt.
+c). İstilik effekti.
+d). Qann effekti.
+e). Holl effekti.
+
+63. Termoelektrik əmsal nədir?
+a). Toxunma yerlərinin temperatur fərqi 1K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+b). Temperatur fərqi 0K olduqda yaranan xarici qüvvəyə bərabər kəmiyyət.
+c). Temperatur fərqi 5K olduqda yaranan daxili qüvvəyə bərabər kəmiyyət.
+d). Temperatur fərqi 5K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+e). Temperatur fərqi 0K olduqda yaranan daxili qüvvəyə bərabər olan kəmiyyət.
+
+64. Peltier effekti nədir?
+a). Cərəyan keçən iki metalın lehim nöqtələrinin birində istilik ayrılır, o birində udulur.
+b). İki metal arasında temperatur fərqi nəticəsində e.h.q.-nin yaranması.
+c). Temperatur fərqi 1K olduqda yaranan termoelektrik e.h.q.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+
+65. Tomson effekti nəyə deyilir?
+a). Qeyri-bərabər qızdırılmış eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+b). İki metalın lehim yerində istilik ayrılıb udulması.
+c). Temperatur fərqi 1K olduqda termoelektrik e.h.q. yaranması.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Temperatur fərqi nəticəsində iki metal arasında e.h.q. yaranması.
+
+66. İonlaşma nədir?
+a). Molekulların neytral haldan yükdaşıyıcıya çevrilməsi.
+b). Elektronun iona birləşərək neytral molekul əmələ gətirməsi.
+c). Qazda yükdaşıyıcı yaradan xarici təsir.
+d). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+e). Güclü sahədə öz-özünə davam edən keçiricilik.
+
+67. İonlaşdırıcı nədir?
+a). Qazda yükdaşıyıcı yaradan xarici təsir.
+b). Zəif sahədə ionlaşdırıcının təsiri.
+c). Güclü sahədə davam edən keçiricilik.
+d). Neytral haldan yükdaşıyıcıya keçid.
+e). Elektronun iona birləşməsi.
+
+68. Rekombinasiya prosesi nəyə deyilir?
+a). Elektron və ion rastlaşdıqda neytral molekul yaranması.
+b). Xarici təsirlə ionlaşma.
+c). Cərəyanın dayanması və neytrallaşma.
+d). Öz-özünə davam edən keçiricilik.
+e). Neytral haldan yükdaşıyıcıya keçid.
+
+69. Qeyri–sərbəst keçiricilik nədir?
+a). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+b). Öz-özünə davam edən keçiricilik.
+c). Molekulların yükdaşıyıcıya çevrilməsi.
+d). Elektron və ionun rastlaşması.
+e). Xarici təsirlə yaranan keçiricilik.
+
+70. Sərbəst qaz keçiriciliyi nəyə deyilir?
+a). Güclü sahədə davam edən keçiricilik.
+b). Təsir kəsildikdə cərəyanın dayanması.
+c). Yüklü hissəciklərin yaranması.
+d). Neytral molekulun yaranması.
+e). Xarici təsirlə qazda keçiricilik yaranması.
+`,
+        d: `51. Yükdaşıyıcı nədir?
+a). Cərəyanda iştirak edən yüklü hissəciklər.
+b). Cərəyanda iştirak etməyən yüklü hissəciklər.
+c). Cərəyanda iştirak edən mənfi yüklü hissəciklər.
+d). Gərginlikdə iştirak edən müsbət yüklü hissəciklər.
+e). Gərginlikdə iştirak edən mənfi yüklü hissəciklər.
+
+52. Cərəyanın istiqaməti necə təyin olunur?
+a). Müsbət yüklərin hərəkət istiqaməti götürülür.
+b). Mənfi yüklərin hərəkət istiqaməti götürülür.
+c). Müsbət və mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+d). Müsbət yüklərin hərəkətinin əksi istiqaməti götürülür.
+e). Mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+
+53. Elektrik deşilməsi nədir?
+a). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirir, keçiriciyə çevrilir.
+b). Sahənin maksimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilir.
+c). Sahənin minimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+d). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+e). Sahənin müəyyən qiymətində qaz keçiricilik xassəsini itirir, izolyasiyaya çevrilir.
+
+54. Omik kontaktlarda nə baş verir?
+a). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulur.
+b). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+c). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+d). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu maksimum olur.
+e). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu minimum olur.
+
+55. Elektrik hərəkət qüvvəsi (e.h.q.) nəyə deyilir?
+a). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə, mənbəyin elektrik hərəkət qüvvəsi deyilir.
+b). Mənfi vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə deyilir.
+c). Müsbət vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin aldığı enerji deyilir.
+d). Mənfi vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin gördüyü işə deyilir.
+e). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin aldığı enerjiyə deyilir.
+
+56. Termoemissiya nəyə deyilir?
+a). Qızdırılmış bərk cisimlərin və mayelərin elektron buraxması hadisəsi.
+b). Soyudulmuş bərk cisimlərin və mayelərin foton buraxması hadisəsi.
+c). Qızdırılmış bərk cisimlərin və mayelərin fermion buraxması hadisəsi.
+d). Soyudulmuş bərk cisimlərin və mayelərin enerji itirməsi hadisəsi.
+e). Soyudulmuş bərk cisimlərin və mayelərin enerji alması hadisəsi.
+
+57. Termoelektron cərəyanını idarə etmək üçün nə etmək lazımdır?
+a). Lampanın daxilində əlavə elektrodlar, torlar yerləşdirilir.
+b). Lampanın daxilində əlavə enerji, közərmə yaradılmalıdır.
+c). Lampanın daxilində cərəyanı azaltmalı, torlar yerləşdirilməməlidir.
+d). Lampanın ətrafında əlavə elektrodlar, torlar yerləşdirilir.
+e). Lampanın ətrafında əlavə enerji və gərginlik yaradılmalıdır.
+
+58. Kontakt potensiallar fərqi nəyə deyilir?
+a). İki müxtəlif metalı bir-birinə toxundurduqda aralarında əmələ gələn potensiallar fərqi.
+b). İki müxtəlif dielektriki bir-birinə toxundurduqda aralarında əmələ gələn potensial fərqi.
+c). İki metalı bir-birindən uzaqlaşdırdıqda aralarında yaranan potensial fərqi.
+d). Bir metalın yaratdığı potensial fərqi.
+e). Yarımkeçirici və metal arasında yaranan potensial fərqi.
+
+59.Kontakt potensiallar fərqi hansı səbəblərdən yaranır?1) toxunan metalların çıxış işlərinin müxtəlif olması 2) bu metallarda sərbəst elektronların konsentrasiyasının müxtəlif olması 3) metal və yarımkeçiricilərin çıxış işləri fərqli olduğu üçün 4)dielektriklərdə qadağan olunmuş zolağın enli olmasına ğörə
+a).1,2  
+b).2,3   
+c).3,4    
+d).1,4   
+e).1,3
+
+60. Kontakt potensiallar fərqi nədən asılıdır?
+a). Toxunan metalların cinsindən və toxunma yerinin temperaturundan.
+b). Yarımkeçiricinin alınma texnologiyasından.
+c). Metalların qadağan olunmuş zolağının enindən.
+d). Dielektriklərin cinsindən və toxunma yerinin temperaturundan.
+e). Metal və yarımkeçiricinin qarşılıqlı təsirindən.
+
+61. Termoelektrik effekt nədir?
+a). Toxunma yerlərinin temperaturları fərqli olduqda iki metal arasında e.h.q. yaranması hadisəsi.
+b). Toxunma yerlərinin temperaturları eyni olduqda e.h.q. yaranması hadisəsi.
+c). Eyni metallardan ibarət dövrədə temperaturlar fərqli olduqda e.h.q. yaranması hadisəsi.
+d). Metal və yarımkeçiricinin yaratdığı açıq dövrədə e.h.q.-si yaranması hadisəsi.
+e). Yarımkeçirici-metal dövrəsində temperaturlar fərqli olduqda e.h.q.-si yaranması.
+
+62. Hansı effektə Zeebeck effekti deyilir?
+a). Termoelektrik effekt.
+b). Qalvanomaqnit effekt.
+c). İstilik effekti.
+d). Qann effekti.
+e). Holl effekti.
+
+63. Termoelektrik əmsal nədir?
+a). Toxunma yerlərinin temperatur fərqi 1K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+b). Temperatur fərqi 0K olduqda yaranan xarici qüvvəyə bərabər kəmiyyət.
+c). Temperatur fərqi 5K olduqda yaranan daxili qüvvəyə bərabər kəmiyyət.
+d). Temperatur fərqi 5K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+e). Temperatur fərqi 0K olduqda yaranan daxili qüvvəyə bərabər olan kəmiyyət.
+
+64. Peltier effekti nədir?
+a). Cərəyan keçən iki metalın lehim nöqtələrinin birində istilik ayrılır, o birində udulur.
+b). İki metal arasında temperatur fərqi nəticəsində e.h.q.-nin yaranması.
+c). Temperatur fərqi 1K olduqda yaranan termoelektrik e.h.q.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+
+65. Tomson effekti nəyə deyilir?
+a). Qeyri-bərabər qızdırılmış eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+b). İki metalın lehim yerində istilik ayrılıb udulması.
+c). Temperatur fərqi 1K olduqda termoelektrik e.h.q. yaranması.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Temperatur fərqi nəticəsində iki metal arasında e.h.q. yaranması.
+
+66. İonlaşma nədir?
+a). Molekulların neytral haldan yükdaşıyıcıya çevrilməsi.
+b). Elektronun iona birləşərək neytral molekul əmələ gətirməsi.
+c). Qazda yükdaşıyıcı yaradan xarici təsir.
+d). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+e). Güclü sahədə öz-özünə davam edən keçiricilik.
+
+67. İonlaşdırıcı nədir?
+a). Qazda yükdaşıyıcı yaradan xarici təsir.
+b). Zəif sahədə ionlaşdırıcının təsiri.
+c). Güclü sahədə davam edən keçiricilik.
+d). Neytral haldan yükdaşıyıcıya keçid.
+e). Elektronun iona birləşməsi.
+
+68. Rekombinasiya prosesi nəyə deyilir?
+a). Elektron və ion rastlaşdıqda neytral molekul yaranması.
+b). Xarici təsirlə ionlaşma.
+c). Cərəyanın dayanması və neytrallaşma.
+d). Öz-özünə davam edən keçiricilik.
+e). Neytral haldan yükdaşıyıcıya keçid.
+
+69. Qeyri–sərbəst keçiricilik nədir?
+a). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+b). Öz-özünə davam edən keçiricilik.
+c). Molekulların yükdaşıyıcıya çevrilməsi.
+d). Elektron və ionun rastlaşması.
+e). Xarici təsirlə yaranan keçiricilik.
+
+70. Sərbəst qaz keçiriciliyi nəyə deyilir?
+a). Güclü sahədə davam edən keçiricilik.
+b). Təsir kəsildikdə cərəyanın dayanması.
+c). Yüklü hissəciklərin yaranması.
+d). Neytral molekulun yaranması.
+e). Xarici təsirlə qazda keçiricilik yaranması.
+`,
+        e: `71. Dreyf sürəti nəyə deyilir?
+a). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+b). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+c). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+d). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+e). Maqnit sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+
+72. Yürüklük nədir?
+a). Yükün vahid sahədə qazandığı Dreyf sürətidir
+b). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+c). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+d). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+e). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+
+73. İkinci elektron emissiyası nəyə deyilir?
+a). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+74. Plazma nəyə deyilir?
+a). Elektrik cəhətdən neytral müsbət və mənfi sərbəst yüklərin məcmusu
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+75. Qövs boşalmasının səbəbi nədir?
+a). Katoddan termoelektron emissiyası ilə elektronların qopması və elektrodlararası qazın yüksək temperatura qədər qızmasıdır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+76. Tac boşalması nədir?
+a). Elektrodlardan biri və ya hər ikisi sivri və ya itiuclu olarsa, o qədər də böyük olmayan elektrik sahələrində yaranır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+77. Aktivləşmə enerjisi nəyə deyilir?
+a). Elektronu valent zonasından keçirici zonaya keçirmək üçün lazım olan enerjiyə
+b). Elektronu keşirici zonasından valent zonaya keçirmək üçün lazım olan enerji
+c). Deşiklərin qadağan olunmuş zonadan valent zonaya keçirmək üçün lazım olan enerji
+d). Deşikləri keçirici zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+e). Elektronu valent zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+
+78. Termistorlar nəyə deyilir?
+a). Temperatura həssas olan yarımkeçiricilər
+b). Temperatura həssas olmayan yarımkeçiricilər
+c). Cərəyanın qiymətinin dəyişməsindən asılı olan yarımkeçiricilər
+d). Məhlulları və ərintiləri elektrik cərəyanı keçirən yarımkeçiricilər
+e). İonlaşmə dərəcəsindən asılı olan cihazlar
+
+79. Elektrolit nəyə deyilir?
+a). Məhlulları və ərintiləri elektrik cərəyanı keçirən maddələr
+b). Məhlulları və ərintiləri elektrik cərəyanı keçirməyən maddələr
+c). Məhlulları cərəyanı keçirməyən ərintiləri temperaturdan asılı olmayan maddələr
+d). Məhlulları və ərintiləri gərginliyi keçirən maddələr
+e). Məhlulları və ərintiləri gərginliyi keçirməyən maddələr
+
+80. Dissosiyasiya hadisəsi nəyə deyilir?
+a). Elektrolitləri suda həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+71. Dreyf sürəti nəyə deyilir?
+a). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+b). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+c). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+d). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+e). Maqnit sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+
+72. Yürüklük nədir?
+a). Yükün vahid sahədə qazandığı Dreyf sürətidir
+b). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+c). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+d). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+e). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+
+73. İkinci elektron emissiyası nəyə deyilir?
+a). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+74. Plazma nəyə deyilir?
+a). Elektrik cəhətdən neytral müsbət və mənfi sərbəst yüklərin məcmusu
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+75. Qövs boşalmasının səbəbi nədir?
+a). Katoddan termoelektron emissiyası ilə elektronların qopması və elektrodlararası qazın yüksək temperatura qədər qızmasıdır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+76. Tac boşalması nədir?
+a). Elektrodlardan biri və ya hər ikisi sivri və ya itiuclu olarsa, o qədər də böyük olmayan elektrik sahələrində yaranır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+77. Aktivləşmə enerjisi nəyə deyilir?
+a). Elektronu valent zonasından keçirici zonaya keçirmək üçün lazım olan enerjiyə
+b). Elektronu keşirici zonasından valent zonaya keçirmək üçün lazım olan enerji
+c). Deşiklərin qadağan olunmuş zonadan valent zonaya keçirmək üçün lazım olan enerji
+d). Deşikləri keçirici zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+e). Elektronu valent zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+
+78. Termistorlar nəyə deyilir?
+a). Temperatura həssas olan yarımkeçiricilər
+b). Temperatura həssas olmayan yarımkeçiricilər
+c). Cərəyanın qiymətinin dəyişməsindən asılı olan yarımkeçiricilər
+d). Məhlulları və ərintiləri elektrik cərəyanı keçirən yarımkeçiricilər
+e). İonlaşmə dərəcəsindən asılı olan cihazlar
+
+79. Elektrolit nəyə deyilir?
+a). Məhlulları və ərintiləri elektrik cərəyanı keçirən maddələr
+b). Məhlulları və ərintiləri elektrik cərəyanı keçirməyən maddələr
+c). Məhlulları cərəyanı keçirməyən ərintiləri temperaturdan asılı olmayan maddələr
+d). Məhlulları və ərintiləri gərginliyi keçirən maddələr
+e). Məhlulları və ərintiləri gərginliyi keçirməyən maddələr
+
+80. Dissosiyasiya hadisəsi nəyə deyilir?
+a). Elektrolitləri suda həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+`,
+        f: `51. Yükdaşıyıcı nədir?
+a). Cərəyanda iştirak edən yüklü hissəciklər.
+b). Cərəyanda iştirak etməyən yüklü hissəciklər.
+c). Cərəyanda iştirak edən mənfi yüklü hissəciklər.
+d). Gərginlikdə iştirak edən müsbət yüklü hissəciklər.
+e). Gərginlikdə iştirak edən mənfi yüklü hissəciklər.
+
+52. Cərəyanın istiqaməti necə təyin olunur?
+a). Müsbət yüklərin hərəkət istiqaməti götürülür.
+b). Mənfi yüklərin hərəkət istiqaməti götürülür.
+c). Müsbət və mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+d). Müsbət yüklərin hərəkətinin əksi istiqaməti götürülür.
+e). Mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+
+53. Elektrik deşilməsi nədir?
+a). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirir, keçiriciyə çevrilir.
+b). Sahənin maksimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilir.
+c). Sahənin minimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+d). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+e). Sahənin müəyyən qiymətində qaz keçiricilik xassəsini itirir, izolyasiyaya çevrilir.
+
+54. Omik kontaktlarda nə baş verir?
+a). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulur.
+b). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+c). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+d). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu maksimum olur.
+e). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu minimum olur.
+
+55. Elektrik hərəkət qüvvəsi (e.h.q.) nəyə deyilir?
+a). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə, mənbəyin elektrik hərəkət qüvvəsi deyilir.
+b). Mənfi vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə deyilir.
+c). Müsbət vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin aldığı enerji deyilir.
+d). Mənfi vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin gördüyü işə deyilir.
+e). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin aldığı enerjiyə deyilir.
+
+56. Termoemissiya nəyə deyilir?
+a). Qızdırılmış bərk cisimlərin və mayelərin elektron buraxması hadisəsi.
+b). Soyudulmuş bərk cisimlərin və mayelərin foton buraxması hadisəsi.
+c). Qızdırılmış bərk cisimlərin və mayelərin fermion buraxması hadisəsi.
+d). Soyudulmuş bərk cisimlərin və mayelərin enerji itirməsi hadisəsi.
+e). Soyudulmuş bərk cisimlərin və mayelərin enerji alması hadisəsi.
+
+57. Termoelektron cərəyanını idarə etmək üçün nə etmək lazımdır?
+a). Lampanın daxilində əlavə elektrodlar, torlar yerləşdirilir.
+b). Lampanın daxilində əlavə enerji, közərmə yaradılmalıdır.
+c). Lampanın daxilində cərəyanı azaltmalı, torlar yerləşdirilməməlidir.
+d). Lampanın ətrafında əlavə elektrodlar, torlar yerləşdirilir.
+e). Lampanın ətrafında əlavə enerji və gərginlik yaradılmalıdır.
+
+58. Kontakt potensiallar fərqi nəyə deyilir?
+a). İki müxtəlif metalı bir-birinə toxundurduqda aralarında əmələ gələn potensiallar fərqi.
+b). İki müxtəlif dielektriki bir-birinə toxundurduqda aralarında əmələ gələn potensial fərqi.
+c). İki metalı bir-birindən uzaqlaşdırdıqda aralarında yaranan potensial fərqi.
+d). Bir metalın yaratdığı potensial fərqi.
+e). Yarımkeçirici və metal arasında yaranan potensial fərqi.
+
+59.Kontakt potensiallar fərqi hansı səbəblərdən yaranır?1) toxunan metalların çıxış işlərinin müxtəlif olması 2) bu metallarda sərbəst elektronların konsentrasiyasının müxtəlif olması 3) metal və yarımkeçiricilərin çıxış işləri fərqli olduğu üçün 4)dielektriklərdə qadağan olunmuş zolağın enli olmasına ğörə
+a).1,2  
+b).2,3   
+c).3,4    
+d).1,4   
+e).1,3
+
+60. Kontakt potensiallar fərqi nədən asılıdır?
+a). Toxunan metalların cinsindən və toxunma yerinin temperaturundan.
+b). Yarımkeçiricinin alınma texnologiyasından.
+c). Metalların qadağan olunmuş zolağının enindən.
+d). Dielektriklərin cinsindən və toxunma yerinin temperaturundan.
+e). Metal və yarımkeçiricinin qarşılıqlı təsirindən.
+
+61. Termoelektrik effekt nədir?
+a). Toxunma yerlərinin temperaturları fərqli olduqda iki metal arasında e.h.q. yaranması hadisəsi.
+b). Toxunma yerlərinin temperaturları eyni olduqda e.h.q. yaranması hadisəsi.
+c). Eyni metallardan ibarət dövrədə temperaturlar fərqli olduqda e.h.q. yaranması hadisəsi.
+d). Metal və yarımkeçiricinin yaratdığı açıq dövrədə e.h.q.-si yaranması hadisəsi.
+e). Yarımkeçirici-metal dövrəsində temperaturlar fərqli olduqda e.h.q.-si yaranması.
+
+62. Hansı effektə Zeebeck effekti deyilir?
+a). Termoelektrik effekt.
+b). Qalvanomaqnit effekt.
+c). İstilik effekti.
+d). Qann effekti.
+e). Holl effekti.
+
+63. Termoelektrik əmsal nədir?
+a). Toxunma yerlərinin temperatur fərqi 1K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+b). Temperatur fərqi 0K olduqda yaranan xarici qüvvəyə bərabər kəmiyyət.
+c). Temperatur fərqi 5K olduqda yaranan daxili qüvvəyə bərabər kəmiyyət.
+d). Temperatur fərqi 5K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+e). Temperatur fərqi 0K olduqda yaranan daxili qüvvəyə bərabər olan kəmiyyət.
+
+64. Peltier effekti nədir?
+a). Cərəyan keçən iki metalın lehim nöqtələrinin birində istilik ayrılır, o birində udulur.
+b). İki metal arasında temperatur fərqi nəticəsində e.h.q.-nin yaranması.
+c). Temperatur fərqi 1K olduqda yaranan termoelektrik e.h.q.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+
+65. Tomson effekti nəyə deyilir?
+a). Qeyri-bərabər qızdırılmış eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+b). İki metalın lehim yerində istilik ayrılıb udulması.
+c). Temperatur fərqi 1K olduqda termoelektrik e.h.q. yaranması.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Temperatur fərqi nəticəsində iki metal arasında e.h.q. yaranması.
+
+66. İonlaşma nədir?
+a). Molekulların neytral haldan yükdaşıyıcıya çevrilməsi.
+b). Elektronun iona birləşərək neytral molekul əmələ gətirməsi.
+c). Qazda yükdaşıyıcı yaradan xarici təsir.
+d). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+e). Güclü sahədə öz-özünə davam edən keçiricilik.
+
+67. İonlaşdırıcı nədir?
+a). Qazda yükdaşıyıcı yaradan xarici təsir.
+b). Zəif sahədə ionlaşdırıcının təsiri.
+c). Güclü sahədə davam edən keçiricilik.
+d). Neytral haldan yükdaşıyıcıya keçid.
+e). Elektronun iona birləşməsi.
+
+68. Rekombinasiya prosesi nəyə deyilir?
+a). Elektron və ion rastlaşdıqda neytral molekul yaranması.
+b). Xarici təsirlə ionlaşma.
+c). Cərəyanın dayanması və neytrallaşma.
+d). Öz-özünə davam edən keçiricilik.
+e). Neytral haldan yükdaşıyıcıya keçid.
+
+69. Qeyri–sərbəst keçiricilik nədir?
+a). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+b). Öz-özünə davam edən keçiricilik.
+c). Molekulların yükdaşıyıcıya çevrilməsi.
+d). Elektron və ionun rastlaşması.
+e). Xarici təsirlə yaranan keçiricilik.
+
+70. Sərbəst qaz keçiriciliyi nəyə deyilir?
+a). Güclü sahədə davam edən keçiricilik.
+b). Təsir kəsildikdə cərəyanın dayanması.
+c). Yüklü hissəciklərin yaranması.
+d). Neytral molekulun yaranması.
+e). Xarici təsirlə qazda keçiricilik yaranması.
+
+71. Dreyf sürəti nəyə deyilir?
+a). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+b). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+c). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+d). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+e). Maqnit sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+
+72. Yürüklük nədir?
+a). Yükün vahid sahədə qazandığı Dreyf sürətidir
+b). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+c). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+d). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+e). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+
+73. İkinci elektron emissiyası nəyə deyilir?
+a). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+74. Plazma nəyə deyilir?
+a). Elektrik cəhətdən neytral müsbət və mənfi sərbəst yüklərin məcmusu
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+75. Qövs boşalmasının səbəbi nədir?
+a). Katoddan termoelektron emissiyası ilə elektronların qopması və elektrodlararası qazın yüksək temperatura qədər qızmasıdır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+76. Tac boşalması nədir?
+a). Elektrodlardan biri və ya hər ikisi sivri və ya itiuclu olarsa, o qədər də böyük olmayan elektrik sahələrində yaranır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+77. Aktivləşmə enerjisi nəyə deyilir?
+a). Elektronu valent zonasından keçirici zonaya keçirmək üçün lazım olan enerjiyə
+b). Elektronu keşirici zonasından valent zonaya keçirmək üçün lazım olan enerji
+c). Deşiklərin qadağan olunmuş zonadan valent zonaya keçirmək üçün lazım olan enerji
+d). Deşikləri keçirici zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+e). Elektronu valent zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+
+78. Termistorlar nəyə deyilir?
+a). Temperatura həssas olan yarımkeçiricilər
+b). Temperatura həssas olmayan yarımkeçiricilər
+c). Cərəyanın qiymətinin dəyişməsindən asılı olan yarımkeçiricilər
+d). Məhlulları və ərintiləri elektrik cərəyanı keçirən yarımkeçiricilər
+e). İonlaşmə dərəcəsindən asılı olan cihazlar
+
+79. Elektrolit nəyə deyilir?
+a). Məhlulları və ərintiləri elektrik cərəyanı keçirən maddələr
+b). Məhlulları və ərintiləri elektrik cərəyanı keçirməyən maddələr
+c). Məhlulları cərəyanı keçirməyən ərintiləri temperaturdan asılı olmayan maddələr
+d). Məhlulları və ərintiləri gərginliyi keçirən maddələr
+e). Məhlulları və ərintiləri gərginliyi keçirməyən maddələr
+
+80. Dissosiyasiya hadisəsi nəyə deyilir?
+a). Elektrolitləri suda həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+`,
+        g: `81. Dissosasiya nəyə deyilir?
+a). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+82. Müsbət ionlar necə adlanır?
+a). Kationlar
+b). Anionlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+83. Mənfi ionlar necə adlanır?
+a). Anionlar
+b). Kationlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+84. Elektroliz hadisəsi nəyə deyilir?
+a). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+b). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+85. Faradeyin I-ci qanunu
+a). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+b). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+86. Faradeyin II-ci qanunu
+a). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+b). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+87. İlk termoelektrik hadisəsi kim tərəfindən kəşf olunmuşdur?
+a). Zeyebek
+b). Küri
+c). Neyel
+d). Debay
+e). Eynşteyn
+
+88. Peltye effekti adlanan ikinci termoelektrik hadisəsinə əsasən:
+a). İki metalın kontaktından cərəyan keçərkən cərəyanın bir istiqamətdə axması zamanı kontakt yerində istilik ayrılırsa, digər istiqamətdə istilik udulur
+b). İki metalın kontaktından cərəyan keçərkən cərəyanın axma istiqamətindən asılı olmayaraq istilik ayrılır
+c). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olmayaraq istilik udulur
+d). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq təzyiq dəyişir
+e). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq həcmin dəyişməsi baş verir
+
+89. Termoelektrik hadisəsi nədir?
+a). Elektronların qəfəs defektlərindən səpilməsi
+b). Qızdırılmış metalda cərəyan əmələ gəlməsi
+c). Qızdırılmış metaldan elektronların qopub ayrılması
+d). Metaldan cərəyan keçərkən istilik ayrılması
+e). Elektronların qəfəs defektlərinə birləşməsi
+
+90. Termocütlərdən hansı kəmiyyəti ölçmək üçün istifadə olunur?
+a). Temperaturu
+b). Həcmi
+c). Təzyiqi
+d). Konsentrasiyanı
+e). Sıxlığı
+`,
+        h: `51. Yükdaşıyıcı nədir?
+a). Cərəyanda iştirak edən yüklü hissəciklər.
+b). Cərəyanda iştirak etməyən yüklü hissəciklər.
+c). Cərəyanda iştirak edən mənfi yüklü hissəciklər.
+d). Gərginlikdə iştirak edən müsbət yüklü hissəciklər.
+e). Gərginlikdə iştirak edən mənfi yüklü hissəciklər.
+
+52. Cərəyanın istiqaməti necə təyin olunur?
+a). Müsbət yüklərin hərəkət istiqaməti götürülür.
+b). Mənfi yüklərin hərəkət istiqaməti götürülür.
+c). Müsbət və mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+d). Müsbət yüklərin hərəkətinin əksi istiqaməti götürülür.
+e). Mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+
+53. Elektrik deşilməsi nədir?
+a). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirir, keçiriciyə çevrilir.
+b). Sahənin maksimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilir.
+c). Sahənin minimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+d). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+e). Sahənin müəyyən qiymətində qaz keçiricilik xassəsini itirir, izolyasiyaya çevrilir.
+
+54. Omik kontaktlarda nə baş verir?
+a). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulur.
+b). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+c). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+d). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu maksimum olur.
+e). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu minimum olur.
+
+55. Elektrik hərəkət qüvvəsi (e.h.q.) nəyə deyilir?
+a). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə, mənbəyin elektrik hərəkət qüvvəsi deyilir.
+b). Mənfi vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə deyilir.
+c). Müsbət vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin aldığı enerji deyilir.
+d). Mənfi vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin gördüyü işə deyilir.
+e). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin aldığı enerjiyə deyilir.
+
+56. Termoemissiya nəyə deyilir?
+a). Qızdırılmış bərk cisimlərin və mayelərin elektron buraxması hadisəsi.
+b). Soyudulmuş bərk cisimlərin və mayelərin foton buraxması hadisəsi.
+c). Qızdırılmış bərk cisimlərin və mayelərin fermion buraxması hadisəsi.
+d). Soyudulmuş bərk cisimlərin və mayelərin enerji itirməsi hadisəsi.
+e). Soyudulmuş bərk cisimlərin və mayelərin enerji alması hadisəsi.
+
+57. Termoelektron cərəyanını idarə etmək üçün nə etmək lazımdır?
+a). Lampanın daxilində əlavə elektrodlar, torlar yerləşdirilir.
+b). Lampanın daxilində əlavə enerji, közərmə yaradılmalıdır.
+c). Lampanın daxilində cərəyanı azaltmalı, torlar yerləşdirilməməlidir.
+d). Lampanın ətrafında əlavə elektrodlar, torlar yerləşdirilir.
+e). Lampanın ətrafında əlavə enerji və gərginlik yaradılmalıdır.
+
+58. Kontakt potensiallar fərqi nəyə deyilir?
+a). İki müxtəlif metalı bir-birinə toxundurduqda aralarında əmələ gələn potensiallar fərqi.
+b). İki müxtəlif dielektriki bir-birinə toxundurduqda aralarında əmələ gələn potensial fərqi.
+c). İki metalı bir-birindən uzaqlaşdırdıqda aralarında yaranan potensial fərqi.
+d). Bir metalın yaratdığı potensial fərqi.
+e). Yarımkeçirici və metal arasında yaranan potensial fərqi.
+
+59.Kontakt potensiallar fərqi hansı səbəblərdən yaranır?1) toxunan metalların çıxış işlərinin müxtəlif olması 2) bu metallarda sərbəst elektronların konsentrasiyasının müxtəlif olması 3) metal və yarımkeçiricilərin çıxış işləri fərqli olduğu üçün 4)dielektriklərdə qadağan olunmuş zolağın enli olmasına ğörə
+a).1,2  
+b).2,3   
+c).3,4    
+d).1,4   
+e).1,3
+
+60. Kontakt potensiallar fərqi nədən asılıdır?
+a). Toxunan metalların cinsindən və toxunma yerinin temperaturundan.
+b). Yarımkeçiricinin alınma texnologiyasından.
+c). Metalların qadağan olunmuş zolağının enindən.
+d). Dielektriklərin cinsindən və toxunma yerinin temperaturundan.
+e). Metal və yarımkeçiricinin qarşılıqlı təsirindən.
+
+61. Termoelektrik effekt nədir?
+a). Toxunma yerlərinin temperaturları fərqli olduqda iki metal arasında e.h.q. yaranması hadisəsi.
+b). Toxunma yerlərinin temperaturları eyni olduqda e.h.q. yaranması hadisəsi.
+c). Eyni metallardan ibarət dövrədə temperaturlar fərqli olduqda e.h.q. yaranması hadisəsi.
+d). Metal və yarımkeçiricinin yaratdığı açıq dövrədə e.h.q.-si yaranması hadisəsi.
+e). Yarımkeçirici-metal dövrəsində temperaturlar fərqli olduqda e.h.q.-si yaranması.
+
+62. Hansı effektə Zeebeck effekti deyilir?
+a). Termoelektrik effekt.
+b). Qalvanomaqnit effekt.
+c). İstilik effekti.
+d). Qann effekti.
+e). Holl effekti.
+
+63. Termoelektrik əmsal nədir?
+a). Toxunma yerlərinin temperatur fərqi 1K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+b). Temperatur fərqi 0K olduqda yaranan xarici qüvvəyə bərabər kəmiyyət.
+c). Temperatur fərqi 5K olduqda yaranan daxili qüvvəyə bərabər kəmiyyət.
+d). Temperatur fərqi 5K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+e). Temperatur fərqi 0K olduqda yaranan daxili qüvvəyə bərabər olan kəmiyyət.
+
+64. Peltier effekti nədir?
+a). Cərəyan keçən iki metalın lehim nöqtələrinin birində istilik ayrılır, o birində udulur.
+b). İki metal arasında temperatur fərqi nəticəsində e.h.q.-nin yaranması.
+c). Temperatur fərqi 1K olduqda yaranan termoelektrik e.h.q.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+
+65. Tomson effekti nəyə deyilir?
+a). Qeyri-bərabər qızdırılmış eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+b). İki metalın lehim yerində istilik ayrılıb udulması.
+c). Temperatur fərqi 1K olduqda termoelektrik e.h.q. yaranması.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Temperatur fərqi nəticəsində iki metal arasında e.h.q. yaranması.
+
+66. İonlaşma nədir?
+a). Molekulların neytral haldan yükdaşıyıcıya çevrilməsi.
+b). Elektronun iona birləşərək neytral molekul əmələ gətirməsi.
+c). Qazda yükdaşıyıcı yaradan xarici təsir.
+d). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+e). Güclü sahədə öz-özünə davam edən keçiricilik.
+
+67. İonlaşdırıcı nədir?
+a). Qazda yükdaşıyıcı yaradan xarici təsir.
+b). Zəif sahədə ionlaşdırıcının təsiri.
+c). Güclü sahədə davam edən keçiricilik.
+d). Neytral haldan yükdaşıyıcıya keçid.
+e). Elektronun iona birləşməsi.
+
+68. Rekombinasiya prosesi nəyə deyilir?
+a). Elektron və ion rastlaşdıqda neytral molekul yaranması.
+b). Xarici təsirlə ionlaşma.
+c). Cərəyanın dayanması və neytrallaşma.
+d). Öz-özünə davam edən keçiricilik.
+e). Neytral haldan yükdaşıyıcıya keçid.
+
+69. Qeyri–sərbəst keçiricilik nədir?
+a). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+b). Öz-özünə davam edən keçiricilik.
+c). Molekulların yükdaşıyıcıya çevrilməsi.
+d). Elektron və ionun rastlaşması.
+e). Xarici təsirlə yaranan keçiricilik.
+
+70. Sərbəst qaz keçiriciliyi nəyə deyilir?
+a). Güclü sahədə davam edən keçiricilik.
+b). Təsir kəsildikdə cərəyanın dayanması.
+c). Yüklü hissəciklərin yaranması.
+d). Neytral molekulun yaranması.
+e). Xarici təsirlə qazda keçiricilik yaranması.
+
+71. Dreyf sürəti nəyə deyilir?
+a). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+b). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+c). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+d). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+e). Maqnit sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+
+72. Yürüklük nədir?
+a). Yükün vahid sahədə qazandığı Dreyf sürətidir
+b). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+c). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+d). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+e). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+
+73. İkinci elektron emissiyası nəyə deyilir?
+a). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+74. Plazma nəyə deyilir?
+a). Elektrik cəhətdən neytral müsbət və mənfi sərbəst yüklərin məcmusu
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+75. Qövs boşalmasının səbəbi nədir?
+a). Katoddan termoelektron emissiyası ilə elektronların qopması və elektrodlararası qazın yüksək temperatura qədər qızmasıdır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+76. Tac boşalması nədir?
+a). Elektrodlardan biri və ya hər ikisi sivri və ya itiuclu olarsa, o qədər də böyük olmayan elektrik sahələrində yaranır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+77. Aktivləşmə enerjisi nəyə deyilir?
+a). Elektronu valent zonasından keçirici zonaya keçirmək üçün lazım olan enerjiyə
+b). Elektronu keşirici zonasından valent zonaya keçirmək üçün lazım olan enerji
+c). Deşiklərin qadağan olunmuş zonadan valent zonaya keçirmək üçün lazım olan enerji
+d). Deşikləri keçirici zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+e). Elektronu valent zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+
+78. Termistorlar nəyə deyilir?
+a). Temperatura həssas olan yarımkeçiricilər
+b). Temperatura həssas olmayan yarımkeçiricilər
+c). Cərəyanın qiymətinin dəyişməsindən asılı olan yarımkeçiricilər
+d). Məhlulları və ərintiləri elektrik cərəyanı keçirən yarımkeçiricilər
+e). İonlaşmə dərəcəsindən asılı olan cihazlar
+
+79. Elektrolit nəyə deyilir?
+a). Məhlulları və ərintiləri elektrik cərəyanı keçirən maddələr
+b). Məhlulları və ərintiləri elektrik cərəyanı keçirməyən maddələr
+c). Məhlulları cərəyanı keçirməyən ərintiləri temperaturdan asılı olmayan maddələr
+d). Məhlulları və ərintiləri gərginliyi keçirən maddələr
+e). Məhlulları və ərintiləri gərginliyi keçirməyən maddələr
+
+80. Dissosiyasiya hadisəsi nəyə deyilir?
+a). Elektrolitləri suda həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+81. Dissosasiya nəyə deyilir?
+a). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+82. Müsbət ionlar necə adlanır?
+a). Kationlar
+b). Anionlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+83. Mənfi ionlar necə adlanır?
+a). Anionlar
+b). Kationlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+84. Elektroliz hadisəsi nəyə deyilir?
+a). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+b). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+85. Faradeyin I-ci qanunu
+a). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+b). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+86. Faradeyin II-ci qanunu
+a). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+b). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+87. İlk termoelektrik hadisəsi kim tərəfindən kəşf olunmuşdur?
+a). Zeyebek
+b). Küri
+c). Neyel
+d). Debay
+e). Eynşteyn
+
+88. Peltye effekti adlanan ikinci termoelektrik hadisəsinə əsasən:
+a). İki metalın kontaktından cərəyan keçərkən cərəyanın bir istiqamətdə axması zamanı kontakt yerində istilik ayrılırsa, digər istiqamətdə istilik udulur
+b). İki metalın kontaktından cərəyan keçərkən cərəyanın axma istiqamətindən asılı olmayaraq istilik ayrılır
+c). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olmayaraq istilik udulur
+d). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq təzyiq dəyişir
+e). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq həcmin dəyişməsi baş verir
+
+89. Termoelektrik hadisəsi nədir?
+a). Elektronların qəfəs defektlərindən səpilməsi
+b). Qızdırılmış metalda cərəyan əmələ gəlməsi
+c). Qızdırılmış metaldan elektronların qopub ayrılması
+d). Metaldan cərəyan keçərkən istilik ayrılması
+e). Elektronların qəfəs defektlərinə birləşməsi
+
+90. Termocütlərdən hansı kəmiyyəti ölçmək üçün istifadə olunur?
+a). Temperaturu
+b). Həcmi
+c). Təzyiqi
+d). Konsentrasiyanı
+e). Sıxlığı
+`,
+        l: `91. Termocütdə yaranan elektrik hərəkət qüvvəsinin vahidi hansıdır?
+a). Volt
+b). Kelvin
+c). Amper
+d). Coul
+e). Vatt
+
+92. Elektronların metaldan çıxış işi nədən asılı olur?
+a). Metalın kimyəvi təbiətindən və onun səthinin təmizliyindən
+b). Metalın uclarına verilmiş potensiallar fərqindən
+c). Metalın temperaturundan
+d). Metalın valentliyindən
+e). Metal üzərinə düşən işığın tezliyindən
+
+93. Coul-Lens istiliyindən əlavə istilik udulması və ya ayrılması baş verən effekt kimə məxsusdur?
+a). Peltyeyə
+b). Coula
+c). Tomsona
+d). Zeyebekə
+e). Lensə
+
+94. İki müxtəlif metaldan ibarət dövrədə kontakt yerlərinin temperaturu müxtəlif olarsa, dövrədə elektrik hərəkət qüvvəsi yaranır. Bu effekt kimə məxsusdur?
+a). Zeyebekə
+b). Coula
+c). Tomsona
+d). Peltyeyə
+e). Lensə
+
+95. Peltye əmsalının vahidi hansıdır?
+a). Volt
+b). Coul
+c). Amper
+d). Farad
+e). Vatt
+
+96. Elektrik cərəyanı nəyə deyilir?
+a). Elektrik yüklərinin sahənin təsirindən istiqamətlənmiş hərəkəti
+b). Elektrik yüklərinin temperaturun təsirindən xaotik hərəkəti
+c). Elektrik yüklərinin əks istiqamətlərdə hərəkəti
+d). Elektrik yüklərinin temperaturun təsirindən istiqamətlənmiş hərəkəti
+e). Elektrik yüklərinin sahənin təsiri olmadan istiqamətlənmiş hərəkəti
+
+97. Cərəyanlı naqilin öz ətrafında maqnit sahəsi yaratması hadisəsini kim kəşf etmişdir?
+a). Ersted
+b). Peltye
+c). Tomsona
+d). Zeyebekə
+e). Lensə
+
+98. Amper qanunu nəyə deyilir?
+a). Sonsuz uzun və bir-birinə paralel cərəyanlı naqillərin vahid uzunluqları arasında qarşılıqlı təsir qüvvəsinin qiyməti, bu naqillərdən axan cərəyan şiddəti ilə düz, onların arasındakı məsafə ilə tərs mütənasibdir
+b). Sonlu uzun və bir-birinə perpendikulyar cərəyanlı naqillərin vahid uzunluqları arasında qarşılıqlı təsir qüvvəsinin qiyməti, bu naqillərdən axan cərəyan şiddəti ilə düz, onların arasındakı məsafə ilə tərs mütənasibdir
+c). Sonlu uzun və bir-birinə paralel cərəyanlı naqillərin vahid uzunluqları arasında qarşılıqlı təsir qüvvəsinin qiyməti, bu naqillərdən axan cərəyan şiddəti ilə tərs, onların arasındakı məsafə ilə düz mütənasibdir
+d). Sonsuz uzun və bir-birinə paralel cərəyanlı naqillərin vahid uzunluqları arasında qarşılıqlı təsir qüvvəsinin qiyməti, bu naqillərdən axan cərəyan şiddəti ilə tərs, onların arasındakı məsafə ilə düz mütənasibdir
+e). Sonsuz uzun və bir-birinə perpendikulyar cərəyanlı naqillərin vahid uzunluqları arasında qarşılıqlı təsir qüvvəsinin qiyməti, bu naqillərdən axan cərəyan şiddəti ilə tərs, onların arasındakı məsafə ilə düz mütənasibdir
+
+99. BS-də maqnit induksiyasının vahidi nədir?
+a). Tl
+b). Vt
+c). V
+d). F
+e). Qs
+
+100. Amper qüvvəsi nəyə deyilir?
+a). Sabit maqnitin qütbləri arasında yerləşmiş cərəyanlı naqil isə həm maqnit qüvvə xətlərinə, həm də naqilə perpendikulyar istiqamətdə meyl edir. Bu hadisələr sübut edir ki, maqnit sahəsində cərəyana qüvvə təsir edir
+b). Dəyişən maqnitin qütbləri arasında yerləşmiş cərəyanlı naqil isə həm maqnit qüvvə xətlərinə, həm də naqilə paralel istiqamətdə meyl edir. Bu hadisələr sübut edir ki, maqnit sahəsində cərəyana qüvvə təsir edir
+c). Dəyişən maqnitin qütbləri arasında yerləşmiş naqil isə həm maqnit qüvvə xətlərinə, həm də naqilə perpendikulyar istiqamətdə meyl edir. Bu hadisələr sübut edir ki, maqnit sahəsində cərəyana qüvvə təsir edir
+d). Sabit maqnitin qütbləri arasında yerləşmiş cərəyanlı naqil isə həm maqnit qüvvə xətlərinə, həm də naqilə paralel istiqamətdə meyl edir. Bu hadisələr sübut edir ki, maqnit sahəsində cərəyana qüvvə təsir etmir
+e). Dəyişən maqnitin qütbləri arasında yerləşmiş cərəyanlı naqil isə həm maqnit qüvvə xətlərinə, həm də naqilə paralel istiqamətdə meyl edir. Bu hadisələr sübut edir ki, maqnit sahəsində cərəyana qüvvə təsir etmir
+`,
+        m: `51. Yükdaşıyıcı nədir?
+a). Cərəyanda iştirak edən yüklü hissəciklər.
+b). Cərəyanda iştirak etməyən yüklü hissəciklər.
+c). Cərəyanda iştirak edən mənfi yüklü hissəciklər.
+d). Gərginlikdə iştirak edən müsbət yüklü hissəciklər.
+e). Gərginlikdə iştirak edən mənfi yüklü hissəciklər.
+
+52. Cərəyanın istiqaməti necə təyin olunur?
+a). Müsbət yüklərin hərəkət istiqaməti götürülür.
+b). Mənfi yüklərin hərəkət istiqaməti götürülür.
+c). Müsbət və mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+d). Müsbət yüklərin hərəkətinin əksi istiqaməti götürülür.
+e). Mənfi yüklərin hərəkətinin əksi istiqaməti götürülür.
+
+53. Elektrik deşilməsi nədir?
+a). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirir, keçiriciyə çevrilir.
+b). Sahənin maksimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilir.
+c). Sahənin minimum qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+d). Sahənin müəyyən qiymətində qaz izolyasiya xassəsini itirmir, keçiriciyə çevrilmir.
+e). Sahənin müəyyən qiymətində qaz keçiricilik xassəsini itirir, izolyasiyaya çevrilir.
+
+54. Omik kontaktlarda nə baş verir?
+a). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulur.
+b). İki yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+c). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu pozulmur.
+d). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu maksimum olur.
+e). Dielektrik ilə yarımkeçiricinin və yarımkeçirici ilə metalın kontaktlarında da Om qanunu minimum olur.
+
+55. Elektrik hərəkət qüvvəsi (e.h.q.) nəyə deyilir?
+a). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə, mənbəyin elektrik hərəkət qüvvəsi deyilir.
+b). Mənfi vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin gördüyü işə deyilir.
+c). Müsbət vahid yükün açıq dövrə boyunca hərəkəti zamanı kənar qüvvələrin aldığı enerji deyilir.
+d). Mənfi vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin gördüyü işə deyilir.
+e). Müsbət vahid yükün qapalı dövrə boyunca hərəkəti zamanı daxili qüvvələrin aldığı enerjiyə deyilir.
+
+56. Termoemissiya nəyə deyilir?
+a). Qızdırılmış bərk cisimlərin və mayelərin elektron buraxması hadisəsi.
+b). Soyudulmuş bərk cisimlərin və mayelərin foton buraxması hadisəsi.
+c). Qızdırılmış bərk cisimlərin və mayelərin fermion buraxması hadisəsi.
+d). Soyudulmuş bərk cisimlərin və mayelərin enerji itirməsi hadisəsi.
+e). Soyudulmuş bərk cisimlərin və mayelərin enerji alması hadisəsi.
+
+57. Termoelektron cərəyanını idarə etmək üçün nə etmək lazımdır?
+a). Lampanın daxilində əlavə elektrodlar, torlar yerləşdirilir.
+b). Lampanın daxilində əlavə enerji, közərmə yaradılmalıdır.
+c). Lampanın daxilində cərəyanı azaltmalı, torlar yerləşdirilməməlidir.
+d). Lampanın ətrafında əlavə elektrodlar, torlar yerləşdirilir.
+e). Lampanın ətrafında əlavə enerji və gərginlik yaradılmalıdır.
+
+58. Kontakt potensiallar fərqi nəyə deyilir?
+a). İki müxtəlif metalı bir-birinə toxundurduqda aralarında əmələ gələn potensiallar fərqi.
+b). İki müxtəlif dielektriki bir-birinə toxundurduqda aralarında əmələ gələn potensial fərqi.
+c). İki metalı bir-birindən uzaqlaşdırdıqda aralarında yaranan potensial fərqi.
+d). Bir metalın yaratdığı potensial fərqi.
+e). Yarımkeçirici və metal arasında yaranan potensial fərqi.
+
+59.Kontakt potensiallar fərqi hansı səbəblərdən yaranır?1) toxunan metalların çıxış işlərinin müxtəlif olması 2) bu metallarda sərbəst elektronların konsentrasiyasının müxtəlif olması 3) metal və yarımkeçiricilərin çıxış işləri fərqli olduğu üçün 4)dielektriklərdə qadağan olunmuş zolağın enli olmasına ğörə
+a).1,2  
+b).2,3   
+c).3,4    
+d).1,4   
+e).1,3
+
+60. Kontakt potensiallar fərqi nədən asılıdır?
+a). Toxunan metalların cinsindən və toxunma yerinin temperaturundan.
+b). Yarımkeçiricinin alınma texnologiyasından.
+c). Metalların qadağan olunmuş zolağının enindən.
+d). Dielektriklərin cinsindən və toxunma yerinin temperaturundan.
+e). Metal və yarımkeçiricinin qarşılıqlı təsirindən.
+
+61. Termoelektrik effekt nədir?
+a). Toxunma yerlərinin temperaturları fərqli olduqda iki metal arasında e.h.q. yaranması hadisəsi.
+b). Toxunma yerlərinin temperaturları eyni olduqda e.h.q. yaranması hadisəsi.
+c). Eyni metallardan ibarət dövrədə temperaturlar fərqli olduqda e.h.q. yaranması hadisəsi.
+d). Metal və yarımkeçiricinin yaratdığı açıq dövrədə e.h.q.-si yaranması hadisəsi.
+e). Yarımkeçirici-metal dövrəsində temperaturlar fərqli olduqda e.h.q.-si yaranması.
+
+62. Hansı effektə Zeebeck effekti deyilir?
+a). Termoelektrik effekt.
+b). Qalvanomaqnit effekt.
+c). İstilik effekti.
+d). Qann effekti.
+e). Holl effekti.
+
+63. Termoelektrik əmsal nədir?
+a). Toxunma yerlərinin temperatur fərqi 1K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+b). Temperatur fərqi 0K olduqda yaranan xarici qüvvəyə bərabər kəmiyyət.
+c). Temperatur fərqi 5K olduqda yaranan daxili qüvvəyə bərabər kəmiyyət.
+d). Temperatur fərqi 5K olduqda yaranan e.h.q.-yə bərabər olan kəmiyyət.
+e). Temperatur fərqi 0K olduqda yaranan daxili qüvvəyə bərabər olan kəmiyyət.
+
+64. Peltier effekti nədir?
+a). Cərəyan keçən iki metalın lehim nöqtələrinin birində istilik ayrılır, o birində udulur.
+b). İki metal arasında temperatur fərqi nəticəsində e.h.q.-nin yaranması.
+c). Temperatur fərqi 1K olduqda yaranan termoelektrik e.h.q.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+
+65. Tomson effekti nəyə deyilir?
+a). Qeyri-bərabər qızdırılmış eyni metaldan cərəyan keçdikdə istilik ayrılması və ya udulması.
+b). İki metalın lehim yerində istilik ayrılıb udulması.
+c). Temperatur fərqi 1K olduqda termoelektrik e.h.q. yaranması.
+d). Eyni metalda Coul-Lens istiliyinin yaranması.
+e). Temperatur fərqi nəticəsində iki metal arasında e.h.q. yaranması.
+
+66. İonlaşma nədir?
+a). Molekulların neytral haldan yükdaşıyıcıya çevrilməsi.
+b). Elektronun iona birləşərək neytral molekul əmələ gətirməsi.
+c). Qazda yükdaşıyıcı yaradan xarici təsir.
+d). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+e). Güclü sahədə öz-özünə davam edən keçiricilik.
+
+67. İonlaşdırıcı nədir?
+a). Qazda yükdaşıyıcı yaradan xarici təsir.
+b). Zəif sahədə ionlaşdırıcının təsiri.
+c). Güclü sahədə davam edən keçiricilik.
+d). Neytral haldan yükdaşıyıcıya keçid.
+e). Elektronun iona birləşməsi.
+
+68. Rekombinasiya prosesi nəyə deyilir?
+a). Elektron və ion rastlaşdıqda neytral molekul yaranması.
+b). Xarici təsirlə ionlaşma.
+c). Cərəyanın dayanması və neytrallaşma.
+d). Öz-özünə davam edən keçiricilik.
+e). Neytral haldan yükdaşıyıcıya keçid.
+
+69. Qeyri–sərbəst keçiricilik nədir?
+a). İonlaşdırıcının təsiri kəsildikdə cərəyanın dayanması.
+b). Öz-özünə davam edən keçiricilik.
+c). Molekulların yükdaşıyıcıya çevrilməsi.
+d). Elektron və ionun rastlaşması.
+e). Xarici təsirlə yaranan keçiricilik.
+
+70. Sərbəst qaz keçiriciliyi nəyə deyilir?
+a). Güclü sahədə davam edən keçiricilik.
+b). Təsir kəsildikdə cərəyanın dayanması.
+c). Yüklü hissəciklərin yaranması.
+d). Neytral molekulun yaranması.
+e). Xarici təsirlə qazda keçiricilik yaranması.
+
+71. Dreyf sürəti nəyə deyilir?
+a). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+b). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+c). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+d). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+e). Maqnit sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+
+72. Yürüklük nədir?
+a). Yükün vahid sahədə qazandığı Dreyf sürətidir
+b). Elektrik sahəsində yükün qazandığı nizamlı hərəkət sürətinə
+c). Maqnit sahəsində yükün qazandığı xaotik hərəkət sürətinə
+d). Başlanğıc halda yükün qazandığı xaotik hərəkət sürətinə
+e). Elektrik sahəsində yükün qazandığı xaotik hərəkət sürətinə
+
+73. İkinci elektron emissiyası nəyə deyilir?
+a). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+74. Plazma nəyə deyilir?
+a). Elektrik cəhətdən neytral müsbət və mənfi sərbəst yüklərin məcmusu
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+75. Qövs boşalmasının səbəbi nədir?
+a). Katoddan termoelektron emissiyası ilə elektronların qopması və elektrodlararası qazın yüksək temperatura qədər qızmasıdır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+76. Tac boşalması nədir?
+a). Elektrodlardan biri və ya hər ikisi sivri və ya itiuclu olarsa, o qədər də böyük olmayan elektrik sahələrində yaranır.
+b). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+c). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+e). Sahə zəiflədikcə elektronun kinetik enerjisi də azalır, toqquşmalar elastiki xarakter daşıyır
+
+77. Aktivləşmə enerjisi nəyə deyilir?
+a). Elektronu valent zonasından keçirici zonaya keçirmək üçün lazım olan enerjiyə
+b). Elektronu keşirici zonasından valent zonaya keçirmək üçün lazım olan enerji
+c). Deşiklərin qadağan olunmuş zonadan valent zonaya keçirmək üçün lazım olan enerji
+d). Deşikləri keçirici zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+e). Elektronu valent zonadan qadağan olunmuş zolağa keçirmək üçün lazım olan enerji
+
+78. Termistorlar nəyə deyilir?
+a). Temperatura həssas olan yarımkeçiricilər
+b). Temperatura həssas olmayan yarımkeçiricilər
+c). Cərəyanın qiymətinin dəyişməsindən asılı olan yarımkeçiricilər
+d). Məhlulları və ərintiləri elektrik cərəyanı keçirən yarımkeçiricilər
+e). İonlaşmə dərəcəsindən asılı olan cihazlar
+
+79. Elektrolit nəyə deyilir?
+a). Məhlulları və ərintiləri elektrik cərəyanı keçirən maddələr
+b). Məhlulları və ərintiləri elektrik cərəyanı keçirməyən maddələr
+c). Məhlulları cərəyanı keçirməyən ərintiləri temperaturdan asılı olmayan maddələr
+d). Məhlulları və ərintiləri gərginliyi keçirən maddələr
+e). Məhlulları və ərintiləri gərginliyi keçirməyən maddələr
+
+80. Dissosiyasiya hadisəsi nəyə deyilir?
+a). Elektrolitləri suda həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+81. Dissosasiya nəyə deyilir?
+a). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+b). Güclü sahələrdə katodun səthinə zərbə ilə dəyən müsbət ionlar oradan yeni elektronlar qoparır
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+82. Müsbət ionlar necə adlanır?
+a). Kationlar
+b). Anionlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+83. Mənfi ionlar necə adlanır?
+a). Anionlar
+b). Kationlar
+c). Fotonlar
+d). Fermionlar
+e). Bazonlar
+
+84. Elektroliz hadisəsi nəyə deyilir?
+a). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+b). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+c). Zəif sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+d). Güclü sahələrdə katodun səthinə zərbə ilə dəyən mənfi ionlar oradan yeni elektronlar qoparır
+e). Sahə gücləndikcə elektronun kinetik enerjisi də artır, toqquşmalar qeyri-elastiki xarakter daşıyır
+
+85. Faradeyin I-ci qanunu
+a). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+b). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+86. Faradeyin II-ci qanunu
+a). Maddənin elektrokimyəvi ekvivalenti onun kimyəvi ekvivalenti ilə düz mütənasibdir
+b). Elektrod üzərində ayrılan maddənin kütləsi elektrolitdən keçən yükün miqdarı ilə düz mütənasibdir
+c). Cərəyanın təsiri ilə maddənin tərkib hissəsinə ayrılmasına
+d). Həlledicilərin təsiri ilə maddəni təşkil edən molekulların müsbət və mənfi ionlara parçalanmasına
+e). Elektrolitləri suda və ya digər poliar mayelərdə həll etdikdə maddənin əksər molekulları müsbət və mənfi ionlara parçalanır
+
+87. İlk termoelektrik hadisəsi kim tərəfindən kəşf olunmuşdur?
+a). Zeyebek
+b). Küri
+c). Neyel
+d). Debay
+e). Eynşteyn
+
+88. Peltye effekti adlanan ikinci termoelektrik hadisəsinə əsasən:
+a). İki metalın kontaktından cərəyan keçərkən cərəyanın bir istiqamətdə axması zamanı kontakt yerində istilik ayrılırsa, digər istiqamətdə istilik udulur
+b). İki metalın kontaktından cərəyan keçərkən cərəyanın axma istiqamətindən asılı olmayaraq istilik ayrılır
+c). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olmayaraq istilik udulur
+d). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq təzyiq dəyişir
+e). İki metalın kontaktından cərəyan keçərkən axma istiqamətindən asılı olaraq həcmin dəyişməsi baş verir
+
+89. Termoelektrik hadisəsi nədir?
+a). Elektronların qəfəs defektlərindən səpilməsi
+b). Qızdırılmış metalda cərəyan əmələ gəlməsi
+c). Qızdırılmış metaldan elektronların qopub ayrılması
+d). Metaldan cərəyan keçərkən istilik ayrılması
+e). Elektronların qəfəs defektlərinə birləşməsi
+
+90. Termocütlərdən hansı kəmiyyəti ölçmək üçün istifadə olunur?
+a). Temperaturu
+b). Həcmi
+c). Təzyiqi
+d). Konsentrasiyanı
+e). Sıxlığı
+`
+    };
+
     const allowedIPPrefixes = [
       "37.114.", "45.15.", "188.253.", "82.194.",
       "185.146.", "94.20.", "149.126.", "37.26.", "62.217."
@@ -803,6 +2556,7 @@ E). 5"></textarea>
     const quizLauncher = document.getElementById("quizLauncher");
     const quizGenerator = document.getElementById("quizGenerator");
     const quizBackBtn = document.getElementById("quizBackBtn");
+    const rawInput = document.getElementById("rawInput"); // Get the rawInput textarea
 
     const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
@@ -1077,28 +2831,6 @@ E). 5"></textarea>
       return questions;
     }
 
-    function normalizeText(text) {
-      text = text.replace(/\(\s*a\s*\)\s*̅/g, '\\overrightarrow{a}');
-      text = text.replace(/\(\s*b\s*\)\s*̅/g, '\\overrightarrow{b}');
-      text = text.replace(/√\s*3/g, '\\sqrt{3}');
-      return text;
-    }
-
-    function convertToLatexFraction(text) {
-      return text.replace(/([a-zA-Z])\^(\d+)\/(\d+)/g, function(match, v, exp, denom) {
-        return `\\frac{${v}^{${exp}}}{${denom}}`;
-      });
-    }
-
-    function wrapMathIfNeeded(text) {
-      let normalized = normalizeText(text);
-      const fracConverted = convertToLatexFraction(normalized);
-      if (fracConverted !== text || /\\overrightarrow|\\sqrt/.test(normalized)) {
-        return `\\(${fracConverted}\\)`;
-      }
-      return text;
-    }
-
     function buildQuiz(questionsData) {
       const quizDiv = document.getElementById("quiz");
       quizDiv.innerHTML = "";
@@ -1111,7 +2843,7 @@ E). 5"></textarea>
 
       questions.forEach((qObj, qIndex) => {
         const opts = qObj.options.map((optText, idx) => ({
-          text: wrapMathIfNeeded(optText),
+          text: optText, // Reverted: removed wrapMathIfNeeded
           isCorrect: idx === 0
         }));
 
@@ -1125,8 +2857,7 @@ E). 5"></textarea>
 
         const questionEl = document.createElement("div");
         questionEl.classList.add("question-text");
-        const wrappedQuestion = wrapMathIfNeeded(qObj.question);
-        questionEl.innerHTML = `<strong>${qIndex + 1}.</strong> ${wrappedQuestion}`;
+        questionEl.innerHTML = `<strong>${qIndex + 1}.</strong> ${qObj.question}`; // Reverted: removed wrapMathIfNeeded
         containerDiv.appendChild(questionEl);
 
         const ul = document.createElement("ul");
@@ -1152,9 +2883,7 @@ E). 5"></textarea>
         quizDiv.appendChild(containerDiv);
       });
 
-      if (window.MathJax) {
-        MathJax.typesetPromise();
-      }
+      // Removed MathJax typesetting: if (window.MathJax) { MathJax.typesetPromise(); }
     }
 
     function showResults(numQuestions) {
@@ -1205,6 +2934,24 @@ E). 5"></textarea>
       quizBackBtn.addEventListener("click", (e) => {
         e.preventDefault();
         renderMainMenu();
+        // Clear quiz generator fields when going back to main menu
+        document.getElementById("rawInput").value = "";
+        document.getElementById("quiz").innerHTML = "";
+        document.getElementById("result").textContent = "";
+        document.getElementById("submitQuiz").style.display = "none";
+        document.getElementById("parseQuiz").disabled = false;
+      });
+
+      // New: Event listener for template buttons
+      document.querySelectorAll(".template-btn").forEach(button => {
+          button.addEventListener("click", (e) => {
+              const templateName = e.target.dataset.template;
+              if (quizTemplates[templateName]) {
+                  rawInput.value = quizTemplates[templateName];
+                  // Optionally, you might want to automatically parse the quiz after loading a template
+                  // document.getElementById("parseQuiz").click();
+              }
+          });
       });
     });
 
